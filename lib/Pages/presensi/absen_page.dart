@@ -303,12 +303,11 @@ class _PerekamanPageState extends State<PerekamanPage> {
         source: ImageSource.camera, imageQuality: 50);
 
     if (image != null) {
-      // jika di cancel
       setState(() {
-        _imageFile = image;
-        _imageList.add(_imageFile);
+        _imageList.add(image);
       });
     }
+    // jika di cancel
   }
 
   Future<Null> _uploadImage() async {
@@ -544,8 +543,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
                                           MediaQuery.of(context).size.width / 5,
                                       color: Colors.blue.withOpacity(0.7),
                                     ),
-                                    onPressed: () =>
-                                        _getImage(),
+                                    onPressed: () => _getImage(),
                                   ),
                                 ),
                               ),

@@ -300,12 +300,11 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
         source: ImageSource.camera, imageQuality: 50);
 
     if (image != null) {
-      // jika di cancel
       setState(() {
-        _imageFile = image;
-        _imageList.add(_imageFile);
+        _imageList.add(image);
       });
     }
+    // jika di cancel
   }
 
   Future<Null> _uploadImage() async {
