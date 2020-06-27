@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
+import 'package:audioplayers/audio_cache.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -52,22 +53,6 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
     });
   }
 
-  uploadData() async {
-    String base64Image = base64Encode(_imageFile.readAsBytesSync());
-    var response = await http.post(Uri.encodeFull(BaseUrl.rekamlembur), body: {
-      'image': base64Image,
-      'latitude': '100',
-      'longtitude': '200',
-      'lokasi': 'kudus'
-    }, headers: {
-      HttpHeaders.authorizationHeader: "Bearer $token",
-      'Content-Type': 'multipart/form-data'
-    });
-    // final data = jsonDecode(response.body);
-    print(response.body);
-    setState(() {});
-  }
-
   File _imageFile;
   List<File> _imageList = [];
   @override
@@ -104,8 +89,6 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
                     children: <Widget>[
                       GestureDetector(
                         onTap: () {
-                          // Navigator.pop(context);
-                          // UploadData();
                           _uploadImage();
                         },
                         child: Container(
@@ -292,42 +275,33 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
         ]));
   }
 
-  void _openImagePickerModal(BuildContext context) {
-    final flatButtonColor = Theme.of(context).primaryColor;
-    print('Image Picker Modal Called');
-    showModalBottomSheet(
-        context: context,
-        builder: (BuildContext context) {
-          return Container(
-            height: 150.0,
-            padding: EdgeInsets.all(10.0),
-            child: Column(
-              children: <Widget>[
-                Text(
-                  'Pilih sebuah gambar',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                FlatButton(
-                  textColor: flatButtonColor,
-                  child: Text('Kamera'),
-                  onPressed: () {
-                    // _getImage(context, ImageSource.camera);
-                    getImageCamera();
-                  },
-                ),
-              ],
-            ),
-          );
-        });
-  }
-
   File _image1;
 
   void _getImage(BuildContext context, ImageSource source) async {
-    File image = await ImagePicker.pickImage(source: source);
+    // File image = await ImagePicker.pickImage(source: source);
+    // setState(() {
+    //   _imageFile = image;
+    //   _imageList.add(_imageFile);
+    // });
+
+    Random rand = new Random();
+    int random = rand.nextInt(1000000) + 1000;
+
+    var imageFile = await ImagePicker.pickImage(source: ImageSource.camera);
+
+    final tempDir = await getTemporaryDirectory();
+    final path = tempDir.path;
+
+    final title = random.toString();
+
+    Img.Image image = Img.decodeImage(imageFile.readAsBytesSync());
+    Img.Image smallerImg = Img.copyResize(image, width: 500);
+
+    var compressImage = File("$path/FromCamera_$title.jpg")
+      ..writeAsBytesSync(Img.encodeJpg(smallerImg, quality: 95));
+    _image1 = compressImage;
     setState(() {
-      _imageFile = image;
-      _imageList.add(_imageFile);
+      _imageList.add(_image1);
     });
   }
 
@@ -345,7 +319,7 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
                 Container(
                     margin: EdgeInsets.all(10),
                     child: CircularProgressIndicator()),
-                new Text("Mengunggah Absensi..."),
+                new Text("Mengunggah Presensi Lembur..."),
               ],
             ),
           ),
@@ -382,6 +356,10 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
                 setState(() {
                   _imageList.clear();
                 });
+
+                AudioCache player = AudioCache();
+                player.play('your-turn.mp3');
+                
                 Fluttertoast.showToast(
                     msg: "ANDA SUDAH MENGISI PRESENSI",
                     toastLength: Toast.LENGTH_LONG,
@@ -396,6 +374,10 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
                 setState(() {
                   _imageList.clear();
                 });
+
+                AudioCache player = AudioCache();
+                player.play('your-turn.mp3');
+
                 Fluttertoast.showToast(
                     msg: "BERHASIL MENGISI PRESENSI",
                     toastLength: Toast.LENGTH_LONG,
@@ -407,6 +389,10 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
                 Navigator.pop(context);
                 Navigator.pop(context);
               } else if (value == 0) {
+
+                AudioCache player = AudioCache();
+                player.play('your-turn.mp3');
+
                 Fluttertoast.showToast(
                     msg: "BUKAN MASANYA MENGISI PRESENSI",
                     toastLength: Toast.LENGTH_LONG,
@@ -417,6 +403,10 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
                     fontSize: 16.0);
                 Navigator.pop(context);
               } else {
+
+                AudioCache player = AudioCache();
+                player.play('your-turn.mp3');
+                
                 Fluttertoast.showToast(
                     msg: "SISTEM SEDANG MAIN TENIS",
                     toastLength: Toast.LENGTH_LONG,
@@ -470,28 +460,6 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
   void _resetState() {
     setState(() {
       _imageFile = null;
-    });
-  }
-
-  Future getImageCamera() async {
-    Random rand = new Random();
-    int random = rand.nextInt(1000000) + 1000;
-
-    var imageFile = await ImagePicker.pickImage(source: ImageSource.camera);
-
-    final tempDir = await getTemporaryDirectory();
-    final path = tempDir.path;
-
-    final title = random.toString();
-
-    Img.Image image = Img.decodeImage(imageFile.readAsBytesSync());
-    Img.Image smallerImg = Img.copyResize(image, width: 1000);
-
-    var compressImage = await File("$path/FromCamera_$title.jpg")
-      ..writeAsBytesSync(Img.encodeJpg(smallerImg, quality: 95));
-    _image1 = compressImage;
-    setState(() {
-      _imageList.add(_image1);
     });
   }
 
@@ -566,7 +534,7 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
                                   ],
                                 )
                               : OutlineButton(
-                                onPressed: (){},
+                                  onPressed: () {},
                                   child: Container(
                                     width: MediaQuery.of(context).size.width /
                                         1.09,

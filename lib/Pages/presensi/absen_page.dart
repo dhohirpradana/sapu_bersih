@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
+import 'package:audioplayers/audio_cache.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -51,22 +52,6 @@ class _PerekamanPageState extends State<PerekamanPage> {
     print("$id, $token");
   }
 
-  UploadData() async {
-    String base64Image = base64Encode(_imageFile.readAsBytesSync());
-    var response = await http.post(Uri.encodeFull(BaseUrl.rekam), body: {
-      'image': base64Image,
-      'latitude': '100',
-      'longtitude': '200',
-      'lokasi': 'kudus'
-    }, headers: {
-      HttpHeaders.authorizationHeader: "bearer $token",
-      'Content-Type': 'multipart/form-data'
-    });
-    // final data = jsonDecode(response.body);
-    print(response.body);
-    setState(() {});
-  }
-
   File _imageFile;
   List<File> _imageList = [];
   @override
@@ -103,8 +88,6 @@ class _PerekamanPageState extends State<PerekamanPage> {
                     children: <Widget>[
                       GestureDetector(
                         onTap: () {
-                          // Navigator.pop(context);
-                          // UploadData();
                           _uploadImage();
                         },
                         child: Container(
@@ -232,7 +215,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
                     mapType: MapType.normal,
                     initialCameraPosition: CameraPosition(
                       target: LatLng(mylat, mylon),
-                      zoom: 16.0,
+                      zoom: 12.0,
                     ),
                     markers: markers,
                   ),
@@ -291,45 +274,34 @@ class _PerekamanPageState extends State<PerekamanPage> {
         ]));
   }
 
-  void _openImagePickerModal(BuildContext context) {
-    final flatButtonColor = Theme.of(context).primaryColor;
-    print('Image Picker Modal Called');
-    showModalBottomSheet(
-        context: context,
-        builder: (BuildContext context) {
-          return Container(
-            height: 150.0,
-            padding: EdgeInsets.all(10.0),
-            child: Column(
-              children: <Widget>[
-                Text(
-                  'Pilih sebuah gambar',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                FlatButton(
-                  textColor: flatButtonColor,
-                  child: Text('Kamera'),
-                  onPressed: () {
-                    // _getImage(context, ImageSource.camera);
-                    getImageCamera();
-                  },
-                ),
-              ],
-            ),
-          );
-        });
-  }
-
   File _image1;
 
   void _getImage(BuildContext context, ImageSource source) async {
-    File image = await ImagePicker.pickImage(source: source);
+    // File image = await ImagePicker.pickImage(source: source);
+    // setState(() {
+    //   _imageFile = image;
+    //   _imageList.add(_imageFile);
+    // });
+
+    Random rand = new Random();
+    int random = rand.nextInt(1000000) + 1000;
+
+    var imageFile = await ImagePicker.pickImage(source: ImageSource.camera);
+
+    final tempDir = await getTemporaryDirectory();
+    final path = tempDir.path;
+
+    final title = random.toString();
+
+    Img.Image image = Img.decodeImage(imageFile.readAsBytesSync());
+    Img.Image smallerImg = Img.copyResize(image, width: 500);
+
+    var compressImage = File("$path/FromCamera_$title.jpg")
+      ..writeAsBytesSync(Img.encodeJpg(smallerImg, quality: 95));
+    _image1 = compressImage;
     setState(() {
-      _imageFile = image;
-      _imageList.add(_imageFile);
+      _imageList.add(_image1);
     });
-    // Closes the bottom sheet
-    // Navigator.pop(context);
   }
 
   Future<Null> _uploadImage() async {
@@ -346,7 +318,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
                 Container(
                     margin: EdgeInsets.all(10),
                     child: CircularProgressIndicator()),
-                new Text("Mengunggah Absensi..."),
+                new Text("Mengunggah Presensi..."),
               ],
             ),
           ),
@@ -384,6 +356,10 @@ class _PerekamanPageState extends State<PerekamanPage> {
                 setState(() {
                   _imageList.clear();
                 });
+
+                AudioCache player = AudioCache();
+                player.play('your-turn.mp3');
+
                 Fluttertoast.showToast(
                     msg: "ANDA SUDAH MENGISI PRESENSI",
                     toastLength: Toast.LENGTH_LONG,
@@ -398,6 +374,10 @@ class _PerekamanPageState extends State<PerekamanPage> {
                 setState(() {
                   _imageList.clear();
                 });
+
+                AudioCache player = AudioCache();
+                player.play('your-turn.mp3');
+
                 Fluttertoast.showToast(
                     msg: "BERHASIL MENGISI PRESENSI",
                     toastLength: Toast.LENGTH_LONG,
@@ -409,6 +389,10 @@ class _PerekamanPageState extends State<PerekamanPage> {
                 Navigator.pop(context);
                 Navigator.pop(context);
               } else if (value == 0) {
+
+                AudioCache player = AudioCache();
+                player.play('your-turn.mp3');
+                
                 Fluttertoast.showToast(
                     msg: "BUKAN MASANYA MENGISI PRESENSI",
                     toastLength: Toast.LENGTH_LONG,
@@ -419,6 +403,9 @@ class _PerekamanPageState extends State<PerekamanPage> {
                     fontSize: 16.0);
                 Navigator.pop(context);
               } else {
+                AudioCache player = AudioCache();
+                player.play('your-turn.mp3');
+
                 Fluttertoast.showToast(
                     msg: "SISTEM SEDANG MAIN TENIS",
                     toastLength: Toast.LENGTH_LONG,
@@ -466,29 +453,6 @@ class _PerekamanPageState extends State<PerekamanPage> {
     });
   }
 
-  Future getImageCamera() async {
-    Random rand = new Random();
-    int random = rand.nextInt(1000000) + 1000;
-
-    var imageFile = await ImagePicker.pickImage(source: ImageSource.camera);
-
-    final tempDir = await getTemporaryDirectory();
-    final path = tempDir.path;
-
-    final title = random.toString();
-
-    Img.Image image = Img.decodeImage(imageFile.readAsBytesSync());
-    Img.Image smallerImg = Img.copyResize(image, width: 1000);
-
-    var compressImage = await File("$path/FromCamera_$title.jpg")
-      ..writeAsBytesSync(Img.encodeJpg(smallerImg, quality: 95));
-    _image1 = compressImage;
-    setState(() {
-      _imageList.add(_image1);
-    });
-  }
-
-  int simbang = 0;
   simpan() async {
     showDialog(
       context: context,
