@@ -60,7 +60,7 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
       'longtitude': '200',
       'lokasi': 'kudus'
     }, headers: {
-      HttpHeaders.authorizationHeader: "bearer $token",
+      HttpHeaders.authorizationHeader: "Bearer $token",
       'Content-Type': 'multipart/form-data'
     });
     // final data = jsonDecode(response.body);
@@ -364,7 +364,7 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
         Timer(Duration(seconds: 1), () async {
           final file = await http.MultipartFile.fromPath('image', f.path,
               contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
-          imageUploadRequest.headers['authorization'] = 'bearer $token';
+          imageUploadRequest.headers['authorization'] = 'Bearer $token';
           imageUploadRequest.headers['content-type'] = 'multipart/form-data';
           imageUploadRequest.fields['ext'] = mimeTypeData[1];
           imageUploadRequest.fields['latitude'] = mylat.toString();
