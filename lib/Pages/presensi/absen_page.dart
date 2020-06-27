@@ -277,31 +277,16 @@ class _PerekamanPageState extends State<PerekamanPage> {
   File _image1;
 
   void _getImage(BuildContext context, ImageSource source) async {
-    // File image = await ImagePicker.pickImage(source: source);
-    // setState(() {
-    //   _imageFile = image;
-    //   _imageList.add(_imageFile);
-    // });
+    File image = await ImagePicker.pickImage(
+        source: ImageSource.camera, imageQuality: 50);
 
-    Random rand = new Random();
-    int random = rand.nextInt(1000000) + 1000;
-
-    var imageFile = await ImagePicker.pickImage(source: ImageSource.camera);
-
-    final tempDir = await getTemporaryDirectory();
-    final path = tempDir.path;
-
-    final title = random.toString();
-
-    Img.Image image = Img.decodeImage(imageFile.readAsBytesSync());
-    Img.Image smallerImg = Img.copyResize(image, width: 500);
-
-    var compressImage = File("$path/FromCamera_$title.jpg")
-      ..writeAsBytesSync(Img.encodeJpg(smallerImg, quality: 95));
-    _image1 = compressImage;
-    setState(() {
-      _imageList.add(_image1);
-    });
+    if (image != null) {
+      // jika di cancel
+      setState(() {
+        _imageFile = image;
+        _imageList.add(_imageFile);
+      });
+    }
   }
 
   Future<Null> _uploadImage() async {
@@ -389,10 +374,9 @@ class _PerekamanPageState extends State<PerekamanPage> {
                 Navigator.pop(context);
                 Navigator.pop(context);
               } else if (value == 0) {
-
                 AudioCache player = AudioCache();
                 player.play('your-turn.mp3');
-                
+
                 Fluttertoast.showToast(
                     msg: "BUKAN MASANYA MENGISI PRESENSI",
                     toastLength: Toast.LENGTH_LONG,
@@ -482,7 +466,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
   Widget _dataUploadFoto() {
     return Container(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Column(
             children: <Widget>[
@@ -524,6 +508,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
                                   ],
                                 )
                               : OutlineButton(
+                                  onPressed: () {},
                                   child: Container(
                                     width: MediaQuery.of(context).size.width /
                                         1.09,
@@ -535,6 +520,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
                                         size:
                                             MediaQuery.of(context).size.width /
                                                 5,
+                                        color: Colors.blue.withOpacity(0.7),
                                       ),
                                       onPressed: () => _getImage(
                                           context, ImageSource.camera),
