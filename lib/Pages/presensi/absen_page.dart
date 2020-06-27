@@ -365,7 +365,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
         Timer(Duration(seconds: 1), () async {
           final file = await http.MultipartFile.fromPath('image', f.path,
               contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
-          imageUploadRequest.headers['authorization'] = 'bearer $token';
+          imageUploadRequest.headers['authorization'] = 'Bearer $token';
           imageUploadRequest.headers['content-type'] = 'multipart/form-data';
           imageUploadRequest.fields['ext'] = mimeTypeData[1];
           imageUploadRequest.fields['latitude'] = mylat.toString();

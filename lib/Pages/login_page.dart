@@ -90,21 +90,13 @@ class _LoginPageKuState extends State<LoginPageKu> {
       },
     );
 
-    var content = new Utf8Encoder().convert(pass);
-    var md5 = crypto.md5;
-    var passmd5 = md5.convert(content);
-
-    Map dataJson = {"no_thl": "$usn", "password": "$content"};
-    //encode Map to JSON
-    var body = json.encode(dataJson);
-
     final response = await http.post(BaseUrl.login,
         // headers: {'Accept': 'application/json'},
         body: {"no_thl": "$usn", "password": "$pass"});
 
     final data = jsonDecode(response.body);
     // print(response.body);
-    // print(response.statusCode);
+    print(response.statusCode);
 
     Future.delayed(Duration(milliseconds: 0), () async {
       int value = data['value'];
@@ -157,8 +149,6 @@ class _LoginPageKuState extends State<LoginPageKu> {
                     children: <Widget>[
                       _title(),
                       _emailPasswordWidget(),
-                      _validation(),
-                      // _submitButton()
                     ],
                   ),
                 ),
@@ -179,7 +169,7 @@ class _LoginPageKuState extends State<LoginPageKu> {
           padding: EdgeInsets.only(bottom: 10),
           child: Text(validationText,
               style: TextStyle(
-                  fontSize: 15,
+                  fontSize: MediaQuery.of(context).size.width / 25,
                   color: Colors.red,
                   fontWeight: FontWeight.w400)),
         ),
@@ -342,6 +332,7 @@ class _LoginPageKuState extends State<LoginPageKu> {
               ],
             ),
           ),
+          _validation(),
           _submitButton(),
         ],
       ),

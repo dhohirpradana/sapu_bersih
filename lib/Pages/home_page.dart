@@ -261,7 +261,7 @@ class _HalamanUtamaState1 extends State<HalamanUtama> {
                                               6,
                                           color: Color(0xff037171),
                                         ),
-                                        Text("PROFILE",
+                                        Text("PROFIL",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.w500,
                                                 fontSize: MediaQuery.of(context)

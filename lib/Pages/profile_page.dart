@@ -60,12 +60,13 @@ class _ProfilePageState extends State<ProfilePage> {
   int isLoading = 1;
   getProfile() async {
     var response = await http.get(Uri.encodeFull(BaseUrl.profile), headers: {
-      HttpHeaders.authorizationHeader: "bearer $token",
-      'Accept': 'application-json'
+      HttpHeaders.authorizationHeader: "Bearer $token",
+      'Content-Type': 'application-json'
     });
     if (response.statusCode == 200) {
+      // Future.delayed(Duration(milliseconds: 300), () async {
       final data = jsonDecode(response.body);
-      // print(response.body);
+      print(response.body);
       setState(() {
         no_thl = data['no_thl'];
         nama = data['name'];
@@ -134,6 +135,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                     ? "November"
                                                     : "Dessember";
       });
+      // });
     } else {
       setState(() {
         resetSavePref(0);
@@ -152,7 +154,7 @@ class _ProfilePageState extends State<ProfilePage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
-                "PROFIL",
+                "PROFIL KARYAWAN",
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               Icon(Icons.person),

@@ -42,14 +42,13 @@ class _RiwayatKerjaPageState extends State<RiwayatKerjaPage> {
   int isLoading = 1;
   getProfile() async {
     var response = await http.get(Uri.encodeFull(BaseUrl.riwayat), headers: {
-      HttpHeaders.authorizationHeader: "bearer $token",
+      HttpHeaders.authorizationHeader: "Bearer $token",
       'Accept': 'application-json'
     });
 
     if (response.statusCode == 200) {
       data = jsonDecode(response.body);
       print(data);
-      print(response.statusCode);
       setState(() {
         isLoading = 0;
       });
