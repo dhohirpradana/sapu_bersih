@@ -108,13 +108,13 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
                                       color: Colors.white,
                                       fontWeight: FontWeight.w600),
                                 ),
-                                SizedBox(
-                                  width: 9,
-                                ),
-                                Icon(
-                                  Icons.send,
-                                  color: Colors.white,
-                                )
+                                // SizedBox(
+                                //   width: 9,
+                                // ),
+                                // Icon(
+                                //   Icons.send,
+                                //   color: Colors.white,
+                                // )
                               ],
                             ),
                           ),
@@ -200,7 +200,34 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
       Marker(markerId: MarkerId('Lokasiku'), position: LatLng(mylat, mylon)),
     ]);
     DateTime now = DateTime.now();
-    String formattedDate = DateFormat('d MMM').format(now).toUpperCase();
+    String formattedDate = DateFormat('d').format(now).toUpperCase();
+    String formattedMonth = DateFormat('MMM').format(now).toUpperCase();
+    String bln;
+    if (formattedMonth == "JAN") {
+      bln = "JANUARI";
+    } else if (formattedMonth == "FEB") {
+      bln = "FEBRUARI";
+    } else if (formattedMonth == "MAR") {
+      bln = "MARET";
+    } else if (formattedMonth == "APR") {
+      bln = "APRIL";
+    } else if (formattedMonth == "MAY") {
+      bln = "MEI";
+    } else if (formattedMonth == "JUN") {
+      bln = "JUNI";
+    } else if (formattedMonth == "JUL") {
+      bln = "JULI";
+    } else if (formattedMonth == "AUG") {
+      bln = "AGUSTUS";
+    } else if (formattedMonth == "SEP") {
+      bln = "SEPTEMBER";
+    } else if (formattedMonth == "OKT") {
+      bln = "OKTOBER";
+    } else if (formattedMonth == "NOV") {
+      bln = "NOVEMBER";
+    } else {
+      bln = "DESEMBER";
+    }
     return Container(
       padding: EdgeInsets.all(10),
       child: Column(
@@ -251,11 +278,29 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
                     SizedBox(
                       height: 5,
                     ),
-                    Text(
-                      formattedDate,
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: MediaQuery.of(context).size.width / 27),
+                    Row(
+                      children: <Widget>[
+                        Text(
+                          formattedDate,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: MediaQuery.of(context).size.width / 27),
+                        ),
+                        Text(" "),
+                        Text(
+                          bln,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: MediaQuery.of(context).size.width / 27),
+                        ),
+                        Text(" "),
+                        Text(
+                          now.year.toString(),
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: MediaQuery.of(context).size.width / 27),
+                        )
+                      ],
                     ),
                   ],
                 ),
@@ -343,10 +388,10 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
                 });
 
                 AudioCache player = AudioCache();
-                player.play('your-turn.mp3');
+                player.play('anda-sudah-mengisi-presensi-le1593390205.mp3');
 
                 Fluttertoast.showToast(
-                    msg: "ANDA SUDAH MENGISI PRESENSI",
+                    msg: "ANDA SUDAH MENGISI PRESENSI LEMBUR",
                     toastLength: Toast.LENGTH_LONG,
                     gravity: ToastGravity.BOTTOM,
                     timeInSecForIos: 1,
@@ -361,10 +406,10 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
                 });
 
                 AudioCache player = AudioCache();
-                player.play('your-turn.mp3');
+                player.play('berhasil-mengisi-presensi-lemb1593390158.mp3');
 
                 Fluttertoast.showToast(
-                    msg: "BERHASIL MENGISI PRESENSI",
+                    msg: "BERHASIL MENGISI PRESENSI LEMBUR",
                     toastLength: Toast.LENGTH_LONG,
                     gravity: ToastGravity.BOTTOM,
                     timeInSecForIos: 1,
@@ -375,10 +420,10 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
                 Navigator.pop(context);
               } else if (value == 0) {
                 AudioCache player = AudioCache();
-                player.play('your-turn.mp3');
+                player.play('bukan-masanya-mengisi-presensi1593390112.mp3');
 
                 Fluttertoast.showToast(
-                    msg: "BUKAN MASANYA MENGISI PRESENSI",
+                    msg: "BUKAN MASANYA MENGISI PRESENSI LEMBUR",
                     toastLength: Toast.LENGTH_LONG,
                     gravity: ToastGravity.BOTTOM,
                     timeInSecForIos: 1,
@@ -428,6 +473,9 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
         });
       });
     } else {
+      AudioCache player = AudioCache();
+      player.play('anda-belum-memasukan-foto1593391851.mp3');
+
       Fluttertoast.showToast(
           msg: "MASUKAN FOTO",
           toastLength: Toast.LENGTH_SHORT,
@@ -519,8 +567,8 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
                               : OutlineButton(
                                   onPressed: () {},
                                   child: Container(
-                                    width: MediaQuery.of(context).size.width /
-                                        1.09,
+                                    width:
+                                        MediaQuery.of(context).size.width / 1,
                                     height: MediaQuery.of(context).size.height -
                                         MediaQuery.of(context).size.height / 3,
                                     child: IconButton(

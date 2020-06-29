@@ -11,7 +11,7 @@ description: A new Flutter project.
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+1
+version: 3.5.4+1
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
@@ -71,7 +71,13 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
   - lib/assets/jepara.png
-  - assets/your-turn.mp3
+  - assets/anda-sudah-mengisi-presensi-le1593390205.mp3
+  - assets/anda-sudah-mengisi-presensi1593390220.mp3
+  - assets/berhasil-mengisi-presensi-lemb1593390158.mp3
+  - assets/berhasil-mengisi-presensi1593390077.mp3
+  - assets/bukan-masanya-mengisi-presensi1593389995.mp3
+  - assets/bukan-masanya-mengisi-presensi1593390112.mp3
+  - assets/anda-belum-memasukan-foto1593391851.mp3
   #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
