@@ -162,10 +162,12 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
       if (e.code == 'PERMISSION_DENIED') {
         error = 'please grant permission';
         print(error);
+        // SystemChannels.platform.invokeMethod('SystemNavigator.pop');
       }
       if (e.code == 'PERMISSION_DENIED_NEVER_ASK') {
         error = 'permission denied- please enable it from app settings';
         print(error);
+        // SystemChannels.platform.invokeMethod('SystemNavigator.pop');
       }
       myLocation = null;
     }
@@ -240,6 +242,7 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
                   width: MediaQuery.of(context).size.width / 4,
                   height: MediaQuery.of(context).size.width / 4,
                   child: GoogleMap(
+                    zoomControlsEnabled: false,
                     mapType: MapType.normal,
                     initialCameraPosition: CameraPosition(
                       target: LatLng(mylat, mylon),
@@ -533,57 +536,52 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Padding(
-                          padding: const EdgeInsets.only(
-                              top: 0.0, left: 0.0, right: 0.0),
-                          child: _imageList.length > 0
-                              ? Stack(
-                                  children: <Widget>[
-                                    Image.file(
-                                      _imageList[0],
-                                      fit: BoxFit.cover,
-                                      height: MediaQuery.of(context)
-                                              .size
-                                              .height -
-                                          MediaQuery.of(context).size.height /
-                                              3,
-                                      // alignment: Alignment.topCenter,
-                                      width:
-                                          MediaQuery.of(context).size.width / 1,
-                                    ),
-                                    IconButton(
-                                        icon: Icon(Icons.delete_forever,
-                                            size: MediaQuery.of(context)
-                                                    .size
-                                                    .width /
-                                                13,
-                                            color: Colors.red),
-                                        onPressed: () {
-                                          setState(() {
-                                            _imageList.removeAt(0);
-                                          });
-                                        })
-                                  ],
-                                )
-                              : OutlineButton(
-                                  onPressed: () {},
-                                  child: Container(
-                                    width:
-                                        MediaQuery.of(context).size.width / 1,
+                        padding: const EdgeInsets.only(
+                            top: 0.0, left: 0.0, right: 0.0),
+                        child: _imageList.length > 0
+                            ? Stack(
+                                children: <Widget>[
+                                  Image.file(
+                                    _imageList[0],
+                                    fit: BoxFit.cover,
                                     height: MediaQuery.of(context).size.height -
                                         MediaQuery.of(context).size.height / 3,
-                                    child: IconButton(
-                                      icon: Icon(
-                                        Icons.add_a_photo,
-                                        size:
-                                            MediaQuery.of(context).size.width /
-                                                5,
-                                        color: Colors.green.withOpacity(0.7),
-                                      ),
-                                      onPressed: () => _getImage(
-                                          context, ImageSource.camera),
-                                    ),
+                                    // alignment: Alignment.topCenter,
+                                    width: MediaQuery.of(context).size.width,
                                   ),
-                                )),
+                                  IconButton(
+                                      icon: Icon(Icons.delete_forever,
+                                          size: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              13,
+                                          color: Colors.red),
+                                      onPressed: () {
+                                        setState(() {
+                                          _imageList.removeAt(0);
+                                        });
+                                      })
+                                ],
+                              )
+                            : OutlineButton(
+                                onPressed: () {},
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  height: MediaQuery.of(context).size.height -
+                                      MediaQuery.of(context).size.height / 3,
+                                  child: IconButton(
+                                    icon: Icon(
+                                      Icons.add_a_photo,
+                                      size:
+                                          MediaQuery.of(context).size.width / 5,
+                                      color: Colors.green.withOpacity(0.7),
+                                    ),
+                                    onPressed: () =>
+                                        _getImage(context, ImageSource.camera),
+                                  ),
+                                ),
+                              ),
+                      ),
                     ],
                   )
                 ],

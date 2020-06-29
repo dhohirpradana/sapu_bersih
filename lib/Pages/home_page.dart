@@ -1,5 +1,11 @@
+import 'dart:async';
+
+import 'package:android_intent/android_intent.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:location/location.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sapubersih/Pages/presensi/main_absen.dart';
 import 'package:sapubersih/Pages/profile_page.dart';
@@ -33,10 +39,73 @@ class _HalamanUtamaState1 extends State<HalamanUtama> {
     print("$id, $name, $token");
   }
 
+  Timer timer;
   @override
   void initState() {
     super.initState();
     getPref();
+    checkGps();
+    if (gps = true) {
+      timer?.cancel();
+    } else {
+      timer = Timer.periodic(Duration(seconds: 2), (Timer t) => checkGps());
+    }
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
+
+  bool gps = false;
+  var location = Location();
+
+  Future checkGps() async {
+    if (!await location.serviceEnabled()) {
+      location.requestService();
+    }
+    setState(() {
+      gps = true;
+    });
+    timer.cancel();
+  }
+
+/*Show dialog if GPS not enabled and open settings location*/
+  Future _checkGps() async {
+    if (!(await Geolocator().isLocationServiceEnabled())) {
+      if (Theme.of(context).platform == TargetPlatform.android) {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text("Tidak dapat mendapatkan lokasi"),
+                content: const Text('Aktifkan layanan lokasi'),
+                actions: <Widget>[
+                  FlatButton(
+                      child: Text('Aktifkan Sekarang'),
+                      onPressed: () {
+                        final AndroidIntent intent = AndroidIntent(
+                            action:
+                                'android.settings.LOCATION_SOURCE_SETTINGS');
+                        intent.launch();
+                        Navigator.of(context, rootNavigator: true).pop();
+                        _gpsService();
+                      })
+                ],
+              );
+            });
+      }
+    }
+  }
+
+/*Check if gps service is enabled or not*/
+  Future _gpsService() async {
+    if (!(await Geolocator().isLocationServiceEnabled())) {
+      _checkGps();
+      return null;
+    } else
+      return true;
   }
 
   double top = 105;

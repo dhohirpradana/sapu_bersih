@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'package:audioplayers/audio_cache.dart';
+import 'package:flutter_tts/flutter_tts.dart';
+import 'package:flutter_tts/flutter_tts_web.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -19,6 +21,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sapubersih/Pages/login_page.dart';
 import 'package:sapubersih/api/api.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 class PerekamanPage extends StatefulWidget {
   @override
@@ -149,6 +152,8 @@ class _PerekamanPageState extends State<PerekamanPage> {
   int isLoading = 1;
 
   double mylat, mylon;
+
+  FlutterTts flutterTts = FlutterTts();
   getUserLocation() async {
     //call this async method from whereever you need
 
@@ -161,10 +166,12 @@ class _PerekamanPageState extends State<PerekamanPage> {
       if (e.code == 'PERMISSION_DENIED') {
         error = 'please grant permission';
         print(error);
+        // SystemChannels.platform.invokeMethod('SystemNavigator.pop');
       }
       if (e.code == 'PERMISSION_DENIED_NEVER_ASK') {
         error = 'permission denied- please enable it from app settings';
         print(error);
+        // SystemChannels.platform.invokeMethod('SystemNavigator.pop');
       }
       myLocation = null;
     }
@@ -174,6 +181,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
     var addresses =
         await Geocoder.local.findAddressesFromCoordinates(coordinates);
     var first = addresses.first;
+
     print(
         ' ${first.locality}, ${first.adminArea},${first.subLocality}, ${first.subAdminArea},${first.addressLine}, ${first.featureName},${first.thoroughfare}, ${first.subThoroughfare}');
     setState(() {
@@ -239,10 +247,11 @@ class _PerekamanPageState extends State<PerekamanPage> {
                   width: MediaQuery.of(context).size.width / 4,
                   height: MediaQuery.of(context).size.width / 4,
                   child: GoogleMap(
+                    zoomControlsEnabled: false,
                     mapType: MapType.normal,
                     initialCameraPosition: CameraPosition(
                       target: LatLng(mylat, mylon),
-                      zoom: 12.0,
+                      zoom: 16.0,
                     ),
                     markers: markers,
                   ),
@@ -524,57 +533,53 @@ class _PerekamanPageState extends State<PerekamanPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Padding(
-                          padding: const EdgeInsets.only(
-                              top: 0.0, left: 0.0, right: 0.0),
-                          child: _imageList.length > 0
-                              ? Stack(
-                                  children: <Widget>[
-                                    Image.file(
-                                      _imageList[0],
-                                      fit: BoxFit.cover,
-                                      height: MediaQuery.of(context)
-                                              .size
-                                              .height -
-                                          MediaQuery.of(context).size.height /
-                                              3,
-                                      // alignment: Alignment.topCenter,
-                                      width:
-                                          MediaQuery.of(context).size.width / 1,
-                                    ),
-                                    IconButton(
-                                        icon: Icon(Icons.delete_forever,
-                                            size: MediaQuery.of(context)
-                                                    .size
-                                                    .width /
-                                                13,
-                                            color: Colors.red),
-                                        onPressed: () {
-                                          setState(() {
-                                            _imageList.removeAt(0);
-                                          });
-                                        })
-                                  ],
-                                )
-                              : OutlineButton(
-                                  onPressed: () {},
-                                  child: Container(
-                                    width:
-                                        MediaQuery.of(context).size.width / 1,
+                        padding: const EdgeInsets.only(
+                            top: 0.0, left: 0.0, right: 0.0),
+                        child: _imageList.length > 0
+                            ? Stack(
+                                children: <Widget>[
+                                  Image.file(
+                                    _imageList[0],
+                                    fit: BoxFit.cover,
                                     height: MediaQuery.of(context).size.height -
                                         MediaQuery.of(context).size.height / 3,
-                                    child: IconButton(
-                                      icon: Icon(
-                                        Icons.add_a_photo,
-                                        size:
-                                            MediaQuery.of(context).size.width /
-                                                5,
-                                        color: Colors.blue.withOpacity(0.7),
-                                      ),
-                                      onPressed: () => _getImage(
-                                          context, ImageSource.camera),
-                                    ),
+                                    // alignment: Alignment.topCenter,
+                                    width:
+                                        MediaQuery.of(context).size.width / 1,
                                   ),
-                                )),
+                                  IconButton(
+                                      icon: Icon(Icons.delete_forever,
+                                          size: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              13,
+                                          color: Colors.red),
+                                      onPressed: () {
+                                        setState(() {
+                                          _imageList.removeAt(0);
+                                        });
+                                      })
+                                ],
+                              )
+                            : OutlineButton(
+                                onPressed: () {},
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width / 1,
+                                  height: MediaQuery.of(context).size.height -
+                                      MediaQuery.of(context).size.height / 3,
+                                  child: IconButton(
+                                    icon: Icon(
+                                      Icons.add_a_photo,
+                                      size:
+                                          MediaQuery.of(context).size.width / 5,
+                                      color: Colors.blue.withOpacity(0.7),
+                                    ),
+                                    onPressed: () =>
+                                        _getImage(context, ImageSource.camera),
+                                  ),
+                                ),
+                              ),
+                      ),
                     ],
                   )
                 ],
