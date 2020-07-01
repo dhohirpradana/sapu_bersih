@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sapubersih/Pages/presensi/main_absen.dart';
@@ -40,16 +41,35 @@ class _HalamanUtamaState1 extends State<HalamanUtama> {
   }
 
   Timer timer;
+  String title = "";
+  String content = "";
   @override
   void initState() {
     super.initState();
     getPref();
     checkGps();
-    if (gps = true) {
-      timer?.cancel();
-    } else {
-      timer = Timer.periodic(Duration(seconds: 2), (Timer t) => checkGps());
-    }
+
+    OneSignal.shared
+        .setNotificationReceivedHandler((OSNotification notification) {
+      setState(() {
+        title = notification.payload.title;
+        content = notification.payload.body;
+
+        Fluttertoast.showToast(
+            msg: "Notifikasi Masuk",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIos: 1,
+            backgroundColor: Colors.lime.withOpacity(0.9),
+            textColor: Colors.white,
+            fontSize: 16.0);
+      });
+    });
+
+    OneSignal.shared
+        .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
+      print("di Tap");
+    });
   }
 
   @override
@@ -58,17 +78,12 @@ class _HalamanUtamaState1 extends State<HalamanUtama> {
     super.dispose();
   }
 
-  bool gps = false;
   var location = Location();
 
   Future checkGps() async {
     if (!await location.serviceEnabled()) {
       location.requestService();
     }
-    setState(() {
-      gps = true;
-    });
-    timer.cancel();
   }
 
 /*Show dialog if GPS not enabled and open settings location*/

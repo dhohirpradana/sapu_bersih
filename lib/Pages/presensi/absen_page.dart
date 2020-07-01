@@ -1,10 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
 import 'package:audioplayers/audio_cache.dart';
-import 'package:flutter_tts/flutter_tts.dart';
-import 'package:flutter_tts/flutter_tts_web.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -16,12 +13,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:mime/mime.dart';
-import 'package:image/image.dart' as Img;
-import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sapubersih/Pages/login_page.dart';
 import 'package:sapubersih/api/api.dart';
-import 'package:flutter/services.dart' show rootBundle;
 
 class PerekamanPage extends StatefulWidget {
   @override
@@ -152,8 +146,6 @@ class _PerekamanPageState extends State<PerekamanPage> {
   int isLoading = 1;
 
   double mylat, mylon;
-
-  FlutterTts flutterTts = FlutterTts();
   getUserLocation() async {
     //call this async method from whereever you need
 

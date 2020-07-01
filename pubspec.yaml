@@ -50,6 +50,7 @@ dependencies:
   android_intent: ^0.3.6+12
   flutter_tts:
   platform_utils: ^0.1.1
+  onesignal_flutter: ^2.4.1
 
 dev_dependencies:
   flutter_test:
