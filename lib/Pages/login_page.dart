@@ -119,9 +119,9 @@ class _LoginPageKuState extends State<LoginPageKu> {
         Navigator.pop(context);
         setState(() {
           internetStatusText = "";
-          validationText = "Username atau password salah";
+          validationText = "No THL atau password salah";
         });
-        print("Username atau password salah");
+        print("No THL atau password salah");
       } else {
         Navigator.pop(context);
       }
@@ -203,7 +203,7 @@ class _LoginPageKuState extends State<LoginPageKu> {
     return RichText(
       textAlign: TextAlign.center,
       text: TextSpan(
-          text: 'SAB',
+          text: 'S',
           style: GoogleFonts.portLligatSans(
             textStyle: Theme.of(context).textTheme.display1,
             fontSize: 30,
@@ -212,7 +212,7 @@ class _LoginPageKuState extends State<LoginPageKu> {
           ),
           children: [
             TextSpan(
-              text: 'TU',
+              text: 'APU',
               style: TextStyle(color: Color(0xff037171), fontSize: 30),
             ),
             TextSpan(
@@ -238,7 +238,7 @@ class _LoginPageKuState extends State<LoginPageKu> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  "username",
+                  "No THL",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                 ),
                 SizedBox(
@@ -284,7 +284,7 @@ class _LoginPageKuState extends State<LoginPageKu> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  "password",
+                  "Password",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                 ),
                 SizedBox(
