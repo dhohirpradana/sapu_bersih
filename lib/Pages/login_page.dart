@@ -252,7 +252,7 @@ class _LoginPageKuState extends State<LoginPageKu> {
                     keyboardType: TextInputType.number,
                     validator: (e) {
                       if (e.isEmpty) {
-                        return "username tidak boleh kosong";
+                        return "no THL tidak boleh kosong";
                       }
                     },
                     focusNode: _nipFocus,
