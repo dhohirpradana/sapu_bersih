@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:audioplayers/audio_cache.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,7 +9,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sapubersih/Pages/home_page.dart';
 import 'package:sapubersih/api/api.dart';
 import 'login_assets/background.dart';
-import 'package:crypto/crypto.dart' as crypto;
 
 class LoginPageKu extends StatefulWidget {
   @override
@@ -51,7 +51,6 @@ class _LoginPageKuState extends State<LoginPageKu> {
   var value;
   getPref() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    print(_loginStatus);
     setState(() {
       value = preferences.getInt("value");
       _loginStatus = value == 1 ? LoginStatus.signIn : LoginStatus.notSignIn;
@@ -65,8 +64,6 @@ class _LoginPageKuState extends State<LoginPageKu> {
       _loginStatus = LoginStatus.notSignIn;
     });
   }
-
-  bool _barrierDimissable = false;
 
   login() async {
     showDialog(
@@ -90,12 +87,10 @@ class _LoginPageKuState extends State<LoginPageKu> {
       },
     );
 
-    final response = await http.post(BaseUrl.login,
-        // headers: {'Accept': 'application/json'},
-        body: {"no_thl": "$usn", "password": "$pass"});
+    final response = await http
+        .post(BaseUrl.login, body: {"no_thl": "$usn", "password": "$pass"});
 
     final data = jsonDecode(response.body);
-    // print(response.body);
     print(response.statusCode);
 
     Future.delayed(Duration(milliseconds: 0), () async {
@@ -103,7 +98,6 @@ class _LoginPageKuState extends State<LoginPageKu> {
       int id = data['uid'];
       String token = data['token'];
       String name = data['name'];
-      print(value);
       if (value == 1) {
         setState(() {
           savePref(value, id, token, name);
@@ -116,12 +110,13 @@ class _LoginPageKuState extends State<LoginPageKu> {
           internetStatusText = "";
         });
       } else if (value == 0) {
+        AudioCache player = AudioCache();
+        player.play('Nomor-teha-el-atau-password-sa1593903159.mp3');
         Navigator.pop(context);
         setState(() {
           internetStatusText = "";
           validationText = "No THL atau password salah";
         });
-        print("No THL atau password salah");
       } else {
         Navigator.pop(context);
       }

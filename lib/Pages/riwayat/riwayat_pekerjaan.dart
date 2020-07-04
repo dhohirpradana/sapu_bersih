@@ -35,7 +35,6 @@ class _RiwayatKerjaPageState extends State<RiwayatKerjaPage> {
       id = preferences.getInt("id");
       token = preferences.getString("token");
     });
-    print("$id, $token");
     getProfile();
   }
 
@@ -48,7 +47,6 @@ class _RiwayatKerjaPageState extends State<RiwayatKerjaPage> {
 
     if (response.statusCode == 200) {
       data = jsonDecode(response.body);
-      print(data);
       setState(() {
         isLoading = 0;
       });
@@ -178,7 +176,6 @@ class _RiwayatKerjaPageState extends State<RiwayatKerjaPage> {
                           ],
                         ),
                         actions: <Widget>[
-                          // usually buttons at the bottom of the dialog
                           FlatButton(
                             child: Text(
                               "TUTUP",

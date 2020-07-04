@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -46,7 +45,6 @@ class _ProfilePageState extends State<ProfilePage> {
       id = preferences.getInt("id");
       token = preferences.getString("token");
     });
-    print("$id, $token");
     getProfile();
   }
 
@@ -66,7 +64,6 @@ class _ProfilePageState extends State<ProfilePage> {
     if (response.statusCode == 200) {
       // Future.delayed(Duration(milliseconds: 300), () async {
       final data = jsonDecode(response.body);
-      print(response.body);
       setState(() {
         no_thl = data['no_thl'];
         nama = data['name'];
@@ -154,7 +151,7 @@ class _ProfilePageState extends State<ProfilePage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
-                "PROFIL KARYAWAN",
+                "PROFIL PENGGUNA",
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               Icon(Icons.person),

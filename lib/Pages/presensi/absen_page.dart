@@ -46,7 +46,6 @@ class _PerekamanPageState extends State<PerekamanPage> {
       id = preferences.getInt("id");
       token = preferences.getString("token");
     });
-    print("$id, $token");
   }
 
   File _imageFile;
@@ -104,30 +103,15 @@ class _PerekamanPageState extends State<PerekamanPage> {
                                       color: Colors.white,
                                       fontWeight: FontWeight.w600),
                                 ),
-                                // SizedBox(
-                                //   width: 9,
-                                // ),
-                                // Icon(
-                                //   Icons.send,
-                                //   color: Colors.white,
-                                // )
                               ],
                             ),
                           ),
                         ),
                       ),
                       gmaps(),
-                      // Container(
-                      //   height: MediaQuery.of(context).size.height / 8,
-                      //   color: Colors.blue,
-                      // ),
-                      // Expanded(),
                     ],
                   ),
                 ),
-                // Expanded(
-                //   child: Container(),
-                // ),
               ],
             ),
     );
@@ -147,8 +131,6 @@ class _PerekamanPageState extends State<PerekamanPage> {
 
   double mylat, mylon;
   getUserLocation() async {
-    //call this async method from whereever you need
-
     LocationData myLocation;
     String error;
     Location location = new Location();
@@ -167,15 +149,13 @@ class _PerekamanPageState extends State<PerekamanPage> {
       }
       myLocation = null;
     }
-    var currentLocation = myLocation;
+
     final coordinates =
         new Coordinates(myLocation.latitude, myLocation.longitude);
     var addresses =
         await Geocoder.local.findAddressesFromCoordinates(coordinates);
     var first = addresses.first;
 
-    print(
-        ' ${first.locality}, ${first.adminArea},${first.subLocality}, ${first.subAdminArea},${first.addressLine}, ${first.featureName},${first.thoroughfare}, ${first.subThoroughfare}');
     setState(() {
       lokasiku_locality = ' ${first.locality}';
       lokasiku_admin_area = '${first.adminArea}';
@@ -266,8 +246,6 @@ class _PerekamanPageState extends State<PerekamanPage> {
                     SizedBox(
                       height: 5,
                     ),
-                    // Text(
-                    //     "$lokasiku_sublokal, $lokasiku_locality, $lokasiku_subadmin"),
                     Text(
                       "$lokasiku_addressline",
                       style: TextStyle(
@@ -382,7 +360,6 @@ class _PerekamanPageState extends State<PerekamanPage> {
             if (response.statusCode == 200) {
               final data = json.decode(response.body);
               int value = data['value'];
-              print(value);
               if (value == 2) {
                 setState(() {
                   _imageList.clear();
@@ -455,8 +432,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
               setState(() {
                 resetSavePref(0);
               });
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => LoginPageKu()));
+              signOut();
             }
           } catch (e) {
             print(e);
@@ -478,6 +454,13 @@ class _PerekamanPageState extends State<PerekamanPage> {
           fontSize: 16.0);
       Navigator.pop(context);
     }
+  }
+
+  signOut() async {
+    SharedPreferences preference = await SharedPreferences.getInstance();
+    setState(() {
+      preference.setInt("value", null);
+    });
   }
 
   void _resetState() {
@@ -508,9 +491,6 @@ class _PerekamanPageState extends State<PerekamanPage> {
       },
     );
   }
-
-  // DateTime now = DateTime.now();
-  // String formattedDate = DateFormat('kkmmssEEEdMMM').format(now);
 
   Widget _dataUploadFoto() {
     return Container(

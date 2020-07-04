@@ -1,12 +1,8 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:android_intent/android_intent.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:sapubersih/Pages/login_page.dart';
-import 'package:sapubersih/api/api.dart';
 
 class BootScreen extends StatefulWidget {
   @override

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:sapubersih/Pages/boot/boot_screen.dart';
-import 'package:sapubersih/Pages/login_page.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
