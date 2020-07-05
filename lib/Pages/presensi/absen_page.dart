@@ -298,8 +298,6 @@ class _PerekamanPageState extends State<PerekamanPage> {
         ]));
   }
 
-  File _image1;
-
   void _getImage(BuildContext context, ImageSource source) async {
     File image = await ImagePicker.pickImage(
         source: ImageSource.camera, imageQuality: 50);

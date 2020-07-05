@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -111,7 +112,11 @@ class _RiwayatKerjaPageState extends State<RiwayatKerjaPage> {
                                                         ? "November"
                                                         : "Dessember";
             final imageurl = BaseUrl.image;
+            final status = data["data"][index]["lokasi"];
             return Card(
+              color: (status == "1")
+                  ? Colors.lightGreenAccent.withOpacity(0.7)
+                  : Colors.white,
               child: InkWell(
                 splashColor: Colors.blue[300],
                 onTap: () {
@@ -170,7 +175,16 @@ class _RiwayatKerjaPageState extends State<RiwayatKerjaPage> {
                             ),
                             Flexible(
                               child: Center(
-                                child: Image.network("$imageurl/$image"),
+                                child: CachedNetworkImage(
+                                  imageUrl: "$imageurl/$image",
+                                  progressIndicatorBuilder:
+                                      (context, url, downloadProgress) =>
+                                          CircularProgressIndicator(
+                                              value: downloadProgress.progress),
+                                  errorWidget: (context, url, error) =>
+                                      Icon(Icons.error),
+                                ),
+                                // Image.network("$imageurl/$image"),
                               ),
                             ),
                           ],

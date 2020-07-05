@@ -1,5 +1,5 @@
 class BaseUrl {
-  static String ip = "167.99.70.194";
+  static String ip = "http://167.99.70.194";
   // FOR ANDROID EXT
   static String login = "$ip/api/login";
   static String rekam = "$ip/api/presensi";
