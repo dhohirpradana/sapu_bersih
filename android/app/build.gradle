@@ -64,10 +64,7 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        multiDexEnabled true
-        ndk {
-            abiFilters 'x86', 'armeabi-v7a'
-        }
+    }
 signingConfigs {
        release {
            keyAlias keystoreProperties['keyAlias']
