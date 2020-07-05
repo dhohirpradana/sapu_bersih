@@ -77,13 +77,25 @@ class _ProfilePageState extends State<ProfilePage> {
         unit_kerja = data['unit_kerja'];
         isLoading = 0;
 
-        tahun = tanggal_lahir.substring(0, 4);
-        bulan = tanggal_lahir.substring(5, 7);
-        tanggal = tanggal_lahir.substring(8, 10);
+        if (tanggal_lahir != null) {
+          tahun = tanggal_lahir.substring(0, 4);
+          bulan = tanggal_lahir.substring(5, 7);
+          tanggal = tanggal_lahir.substring(8, 10);
+        } else {
+          tahun = " ";
+          bulan = " ";
+          tanggal = " ";
+        }
 
-        tahun1 = tmt_pengangkatan_pertama.substring(0, 4);
-        bulan1 = tmt_pengangkatan_pertama.substring(5, 7);
-        tanggal1 = tmt_pengangkatan_pertama.substring(8, 10);
+        if (tmt_pengangkatan_pertama != null) {
+          tahun1 = tmt_pengangkatan_pertama.substring(0, 4);
+          bulan1 = tmt_pengangkatan_pertama.substring(5, 7);
+          tanggal1 = tmt_pengangkatan_pertama.substring(8, 10);
+        } else {
+          tahun1 = " ";
+          bulan1 = " ";
+          tanggal1 = " ";
+        }
 
         namab = (bulan == "01")
             ? "Januari"
@@ -107,7 +119,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                                 ? "Oktober"
                                                 : (bulan == "11")
                                                     ? "November"
-                                                    : "Dessember";
+                                                    : (bulan == "11")
+                                                        ? "Desember"
+                                                        : " ";
         namab1 = (bulan1 == "01")
             ? "Januari"
             : (bulan1 == "02")
@@ -130,7 +144,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                                 ? "Oktober"
                                                 : (bulan1 == "11")
                                                     ? "November"
-                                                    : "Dessember";
+                                                    : (bulan1 == "11")
+                                                        ? "Desember"
+                                                        : " ";
       });
       // });
     } else {
@@ -235,7 +251,7 @@ class _ProfilePageState extends State<ProfilePage> {
             Row(
               children: <Widget>[
                 Text(
-                  "$tempat_lahir, $tanggal $namab $tahun".toUpperCase(),
+                  "$tempat_lahir $tanggal $namab $tahun".toUpperCase(),
                   style: TextStyle(
                       fontSize: MediaQuery.of(context).size.width / 19,
                       fontWeight: FontWeight.bold),

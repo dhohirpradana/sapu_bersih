@@ -161,7 +161,7 @@ class _HalamanUtamaState1 extends State<HalamanUtama> {
                                 fontSize:
                                     MediaQuery.of(context).size.width / 17),
                           ),
-                          Text("SISTEM ABSENSI PETUGAS KEBERSIHAN KAB JEPARA",
+                          Text("SISTEM ABSENSI PETUGAS KEBERSIHAN KAB. JEPARA",
                               style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   color: Colors.white,
