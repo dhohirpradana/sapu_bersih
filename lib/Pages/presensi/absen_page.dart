@@ -298,7 +298,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
         ]));
   }
 
-  void _getImage(BuildContext context, ImageSource source) async {
+  void _getImage() async {
     File image = await ImagePicker.pickImage(
         source: ImageSource.camera, imageQuality: 50);
 
@@ -545,7 +545,7 @@ class _PerekamanPageState extends State<PerekamanPage> {
                                       color: Colors.blue.withOpacity(0.7),
                                     ),
                                     onPressed: () =>
-                                        _getImage(context, ImageSource.camera),
+                                        _getImage(),
                                   ),
                                 ),
                               ),

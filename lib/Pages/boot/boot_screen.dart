@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:sapubersih/Pages/login_page.dart';
 
 class BootScreen extends StatefulWidget {
@@ -49,7 +50,6 @@ class _BootScreenState extends State<BootScreen> {
     try {
       final result = await InternetAddress.lookup('www.google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        print('connected');
         return new Timer(_duration, navigationPage);
       }
     } on SocketException catch (_) {

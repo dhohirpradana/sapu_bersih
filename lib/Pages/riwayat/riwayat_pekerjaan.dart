@@ -131,7 +131,7 @@ class _RiwayatKerjaPageState extends State<RiwayatKerjaPage> {
                         print(status);
                         return Card(
                           color: (status == 1)
-                              ? Colors.greenAccent[100]
+                              ? Colors.greenAccent[100].withOpacity(0.5)
                               : Colors.white,
                           child: InkWell(
                             splashColor: Colors.blue[300],
