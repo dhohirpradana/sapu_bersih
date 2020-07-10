@@ -7,7 +7,7 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
   OneSignal.shared
-      .init("550fbd31-9338-4b42-bf97-58265c482440", iOSSettings: null);
+      .init("26d64a69-c6e6-4347-908c-61006bd62c35", iOSSettings: null);
   OneSignal.shared
       .setInFocusDisplayType(OSNotificationDisplayType.notification);
 

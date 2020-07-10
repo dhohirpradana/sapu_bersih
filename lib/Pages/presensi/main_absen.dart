@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:sapubersih/Pages/presensi/absen_lembur_page.dart';
 import 'package:sapubersih/Pages/presensi/absen_page.dart';
 
+import 'absen_page_pulang.dart';
+
 class MainPresensiPage1 extends StatefulWidget {
   @override
   _MainAbsenPageState1 createState() => _MainAbsenPageState1();
@@ -80,7 +82,7 @@ class _MainAbsenPageState1 extends State<MainPresensiPage1> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => PerekamanLemburPage()));
+                          builder: (context) => AbsenPulangPage()));
                 },
                 splashColor: Colors.lightGreenAccent,
                 child: Container(

@@ -6,6 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:sapubersih/src/ui/riwayatPekerjaanPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sapubersih/Pages/presensi/main_absen.dart';
 import 'package:sapubersih/Pages/profile_page.dart';
@@ -34,7 +35,6 @@ class _HalamanUtamaState1 extends State<HalamanUtama> {
       id = preferences.getInt("id");
       token = preferences.getString("token");
     });
-    print("$id, $name, $token");
   }
 
   Timer timer;
@@ -254,7 +254,7 @@ class _HalamanUtamaState1 extends State<HalamanUtama> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              RiwayatKerjaPage()));
+                                              NewRiwayatPekerjaanPage()));
                                 },
                                 child: Material(
                                   borderRadius: BorderRadius.circular(10),

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:audioplayers/audio_cache.dart';
+import 'package:camera/camera.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -13,6 +14,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:mime/mime.dart';
+import 'package:path/path.dart' as pathF;
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sapubersih/api/api.dart';
 
@@ -30,6 +33,29 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
     lokasiku_throughfare = "Mendapatkan Lokasi...";
     getUserLocation();
     getPref();
+    getCam();
+  }
+
+  getCam() {
+    availableCameras().then((availableCameras) {
+      cameras = availableCameras;
+      if (cameras.length > 0) {
+        setState(() {
+          // 2
+          isLoading = 0;
+          selectedCameraIdx = 1;
+        });
+
+        _initCameraController(cameras[selectedCameraIdx]).then((void v) {});
+      } else {
+        print("No camera available");
+        Navigator.pop(context);
+      }
+    }).catchError((err) {
+      // 3
+      print('Error: $err.code\nError Message: $err.message');
+      Navigator.pop(context);
+    });
   }
 
   int id;
@@ -49,10 +75,87 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
     });
   }
 
-  File _imageFile;
+  File imageFile;
   List<File> _imageList = [];
+
+  //CameraOnApp
+  //Camera
+  void onCapturePressed(context) async {
+    try {
+      // 1
+      final path = pathF.join(
+        (await getTemporaryDirectory()).path,
+        '${DateTime.now()}.png',
+      );
+      imageFile = File(path);
+      // 2
+      await controller.takePicture(path);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  CameraController controller;
+  List cameras;
+  int selectedCameraIdx;
+  String imagePath;
+
+  Future _initCameraController(CameraDescription cameraDescription) async {
+    if (controller != null) {
+      await controller.dispose();
+    }
+
+    // 3
+    controller = CameraController(cameraDescription, ResolutionPreset.high);
+
+    // If the controller is updated then update the UI.
+    // 4
+    controller.addListener(() {
+      // 5
+      if (mounted) {
+        setState(() {});
+      }
+
+      if (controller.value.hasError) {
+        print('Camera error ${controller.value.errorDescription}');
+        Navigator.pop(context);
+      }
+    });
+
+    // 6
+    try {
+      await controller.initialize();
+    } on CameraException catch (e) {
+      // _showCameraException(e);
+    }
+
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  Widget _cameraPreviewWidget() {
+    if (controller == null || !controller.value.isInitialized) {
+      return const Text(
+        'Loading',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 20.0,
+          fontWeight: FontWeight.w900,
+        ),
+      );
+    }
+    return AspectRatio(
+      aspectRatio: controller.value.aspectRatio,
+      child: CameraPreview(controller),
+    );
+  }
+
+//Camera
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final deviceRatio = size.width / size.height;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
@@ -76,44 +179,80 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
                 child: CircularProgressIndicator(),
               ),
             )
-          : Column(
-              children: <Widget>[
-                Container(color: Colors.transparent, child: _formInputan()),
-                Container(
-                  height: MediaQuery.of(context).size.height / 4.7,
-                  child: Column(
+          :
+          // Column(
+          //     children: <Widget>[
+          //       Container(color: Colors.transparent, child: _formInputan()),
+          //       Container(
+          //         height: MediaQuery.of(context).size.height / 4.7,
+          //         child: Column(
+          //           children: <Widget>[
+          //             GestureDetector(
+          //               onTap: () {
+          //                 _uploadImage();
+          //               },
+          //               child: Container(
+          //                 height: MediaQuery.of(context).size.height / 17,
+          //                 width: (MediaQuery.of(context).size.width),
+          //                 color: Color(0xff037171),
+          //                 child: Center(
+          //                   child: Row(
+          //                     mainAxisAlignment: MainAxisAlignment.center,
+          //                     children: <Widget>[
+          //                       Text(
+          //                         "KIRIM",
+          //                         style: TextStyle(
+          //                             fontSize:
+          //                                 MediaQuery.of(context).size.width /
+          //                                     21,
+          //                             color: Colors.white,
+          //                             fontWeight: FontWeight.w600),
+          //                       ),
+          //                     ],
+          //                   ),
+          //                 ),
+          //               ),
+          //             ),
+          //             gmaps(),
+          //           ],
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          Center(
+              child: Stack(
+                children: <Widget>[
+                  Transform.scale(
+                      scale: controller.value.aspectRatio / deviceRatio,
+                      child: _cameraPreviewWidget()),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
-                      GestureDetector(
-                        onTap: () {
-                          _uploadImage();
-                        },
-                        child: Container(
-                          height: MediaQuery.of(context).size.height / 17,
-                          width: (MediaQuery.of(context).size.width),
-                          color: Color(0xff037171),
-                          child: Center(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Text(
-                                  "KIRIM",
-                                  style: TextStyle(
-                                      fontSize:
-                                          MediaQuery.of(context).size.width /
-                                              21,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w600),
-                                ),
-                              ],
-                            ),
+                      Container(
+                        height: MediaQuery.of(context).size.height / 17,
+                        width: (MediaQuery.of(context).size.width),
+                        color: Color(0xff037171),
+                        child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Text(
+                                "KIRIM",
+                                style: TextStyle(
+                                    fontSize:
+                                        MediaQuery.of(context).size.width / 21,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                            ],
                           ),
                         ),
                       ),
-                      gmaps(),
+                      gmaps()
                     ],
-                  ),
-                ),
-              ],
+                  )
+                ],
+              ),
             ),
     );
   }
@@ -164,7 +303,6 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
       lokasiku_subthroughfare = '${first.subThoroughfare}';
       mylat = myLocation.latitude;
       mylon = myLocation.longitude;
-      isLoading = 0;
     });
     return first;
   }
@@ -205,6 +343,7 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
       bln = "DESEMBER";
     }
     return Container(
+      color: Colors.white,
       padding: EdgeInsets.all(10),
       child: Column(
         children: <Widget>[
@@ -457,7 +596,7 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
 
   void _resetState() {
     setState(() {
-      _imageFile = null;
+      imageFile = null;
     });
   }
 

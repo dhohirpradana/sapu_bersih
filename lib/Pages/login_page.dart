@@ -93,11 +93,12 @@ class _LoginPageKuState extends State<LoginPageKu> {
     final data = jsonDecode(response.body);
     print(response.statusCode);
 
-    Future.delayed(Duration(milliseconds: 0), () async {
+    Future.delayed(Duration(milliseconds: 500), () async {
       int value = data['value'];
       int id = data['uid'];
       String token = data['token'];
       String name = data['name'];
+
       if (value == 1) {
         setState(() {
           savePref(value, id, token, name);
