@@ -19,8 +19,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sapubersih/api/api.dart';
 
-import '../login_page.dart';
-
 class PerekamanLemburPage extends StatefulWidget {
   @override
   _PerekamanPageState createState() => _PerekamanPageState();
@@ -31,9 +29,9 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
   void initState() {
     super.initState();
     lokasiku_throughfare = "Mendapatkan Lokasi...";
+    getCam();
     getUserLocation();
     getPref();
-    getCam();
   }
 
   getCam() {
@@ -157,69 +155,14 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
     final size = MediaQuery.of(context).size;
     final deviceRatio = size.width / size.height;
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Text(
-              "PRESENSI LEMBUR",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            Icon(Icons.assignment),
-          ],
-        ),
-        backgroundColor: Color(0xff037171),
-      ),
       body: isLoading == 1
           ? Container(
               child: Center(
                 child: CircularProgressIndicator(),
               ),
             )
-          :
-          // Column(
-          //     children: <Widget>[
-          //       Container(color: Colors.transparent, child: _formInputan()),
-          //       Container(
-          //         height: MediaQuery.of(context).size.height / 4.7,
-          //         child: Column(
-          //           children: <Widget>[
-          //             GestureDetector(
-          //               onTap: () {
-          //                 _uploadImage();
-          //               },
-          //               child: Container(
-          //                 height: MediaQuery.of(context).size.height / 17,
-          //                 width: (MediaQuery.of(context).size.width),
-          //                 color: Color(0xff037171),
-          //                 child: Center(
-          //                   child: Row(
-          //                     mainAxisAlignment: MainAxisAlignment.center,
-          //                     children: <Widget>[
-          //                       Text(
-          //                         "KIRIM",
-          //                         style: TextStyle(
-          //                             fontSize:
-          //                                 MediaQuery.of(context).size.width /
-          //                                     21,
-          //                             color: Colors.white,
-          //                             fontWeight: FontWeight.w600),
-          //                       ),
-          //                     ],
-          //                   ),
-          //                 ),
-          //               ),
-          //             ),
-          //             gmaps(),
-          //           ],
-          //         ),
-          //       ),
-          //     ],
-          //   ),
-          Center(
+          : Center(
               child: Stack(
                 children: <Widget>[
                   Transform.scale(
@@ -426,14 +369,6 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
     );
   }
 
-  Widget _formInputan() {
-    return Form(
-        key: _key,
-        child: Column(children: <Widget>[
-          _dataUploadFoto(),
-        ]));
-  }
-
   void _getImage(BuildContext context, ImageSource source) async {
     File image = await ImagePicker.pickImage(
         source: ImageSource.camera, imageQuality: 50);
@@ -474,7 +409,7 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
             lookupMimeType(f.path, headerBytes: [0xFF, 0xD8]).split('/');
         // Intilize the multipart request
         final imageUploadRequest =
-            http.MultipartRequest('POST', Uri.parse(BaseUrl.rekamlembur));
+            http.MultipartRequest('POST', Uri.parse(BaseUrl.lembur));
         // Attach the file in the request
         Timer(Duration(seconds: 1), () async {
           final file = await http.MultipartFile.fromPath('image', f.path,

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sapubersih/Pages/presensi/absen_lembur_page.dart';
-import 'package:sapubersih/Pages/presensi/absen_page.dart';
-
-import 'absen_page_pulang.dart';
+import 'package:sapubersih/Pages/presensi/absen_lembur_pulang_pang.dart';
+import 'package:sapubersih/Pages/presensi/absen_reguler_page.dart';
+import 'absen_reguler_pulang_page.dart';
 
 class MainPresensiPage1 extends StatefulWidget {
   @override
@@ -52,7 +51,7 @@ class _MainAbsenPageState1 extends State<MainPresensiPage1> {
                 borderRadius: BorderRadius.circular(15),
                 onTap: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => PerekamanPage()));
+                      MaterialPageRoute(builder: (context) => AbsenPage()));
                 },
                 splashColor: Colors.lightBlueAccent,
                 child: Container(
@@ -61,7 +60,37 @@ class _MainAbsenPageState1 extends State<MainPresensiPage1> {
                   padding: EdgeInsets.all(10),
                   child: Center(
                     child: Text(
-                      "PRESENSI",
+                      "REGULER",
+                      style: TextStyle(
+                          fontSize: MediaQuery.of(context).size.width / 21,
+                          fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 19,
+            ),
+            Material(
+              borderRadius: BorderRadius.circular(15),
+              elevation: 10,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(15),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => AbsenPulangPage()));
+                },
+                splashColor: Colors.lightBlueAccent,
+                child: Container(
+                  height: MediaQuery.of(context).size.width / 6.1,
+                  width: MediaQuery.of(context).size.width / 1.5,
+                  padding: EdgeInsets.all(10),
+                  child: Center(
+                    child: Text(
+                      "REGULER PULANG",
                       style: TextStyle(
                           fontSize: MediaQuery.of(context).size.width / 21,
                           fontWeight: FontWeight.w500),
@@ -91,7 +120,7 @@ class _MainAbsenPageState1 extends State<MainPresensiPage1> {
                   padding: EdgeInsets.all(10),
                   child: Center(
                     child: Text(
-                      "PRESENSI LEMBUR",
+                      "LEMBUR",
                       style: TextStyle(
                           fontSize: MediaQuery.of(context).size.width / 21,
                           fontWeight: FontWeight.w500),
@@ -99,7 +128,37 @@ class _MainAbsenPageState1 extends State<MainPresensiPage1> {
                   ),
                 ),
               ),
-            )
+            ),
+            SizedBox(
+              height: 19,
+            ),
+            Material(
+              borderRadius: BorderRadius.circular(15),
+              elevation: 10,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(15),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => AbsenLemburPulangPage()));
+                },
+                splashColor: Colors.lightGreenAccent,
+                child: Container(
+                  height: MediaQuery.of(context).size.width / 6.1,
+                  width: MediaQuery.of(context).size.width / 1.5,
+                  padding: EdgeInsets.all(10),
+                  child: Center(
+                    child: Text(
+                      "LEMBUR PULANG",
+                      style: TextStyle(
+                          fontSize: MediaQuery.of(context).size.width / 21,
+                          fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),

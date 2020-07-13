@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:android_intent/android_intent.dart';
 import 'package:flutter/material.dart';
@@ -6,11 +7,12 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
-import 'package:sapubersih/src/ui/riwayatPekerjaanPage.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:sapubersih/Pages/chat/main_chat.dart';
+import 'package:sapubersih/Pages/riwayat/riwayat_pekerjaan.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sapubersih/Pages/presensi/main_absen.dart';
 import 'package:sapubersih/Pages/profile_page.dart';
-import 'package:sapubersih/Pages/riwayat/riwayat_pekerjaan.dart';
 
 class HalamanUtama extends StatefulWidget {
   final VoidCallback signOut;
@@ -174,120 +176,75 @@ class _HalamanUtamaState1 extends State<HalamanUtama> {
                 ],
               ),
             ),
-            Container(
-              margin: EdgeInsets.only(
-                  top: MediaQuery.of(context).size.height / 6.7),
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius:
-                      BorderRadius.only(topLeft: Radius.circular(90))),
-              child: Material(
-                elevation: 3,
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(90)),
-                child: Column(
-                  children: <Widget>[
-                    Flexible(
-                      flex: 1,
-                      child: Container(
-                          margin: EdgeInsets.only(
-                              top: MediaQuery.of(context).size.height / 15),
-                          width: MediaQuery.of(context).size.width / 6.3,
+            Stack(
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height / 6.7),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius:
+                          BorderRadius.only(topLeft: Radius.circular(90))),
+                  child: Material(
+                    elevation: 3,
+                    borderRadius:
+                        BorderRadius.only(topLeft: Radius.circular(90)),
+                    child: Column(
+                      children: <Widget>[
+                        Flexible(
+                          flex: 1,
                           child: Container(
-                              child: Icon(Icons.people,
-                                  size: MediaQuery.of(context).size.width / 7,
-                                  color: Color(0xff037171))
-                              // Image(
-                              //     image: AssetImage('lib/assets/bio.png')),
+                              margin: EdgeInsets.only(
+                                  top: MediaQuery.of(context).size.height / 15),
+                              width: MediaQuery.of(context).size.width / 6.3,
+                              child: Container(
+                                  child: Icon(Icons.people,
+                                      size:
+                                          MediaQuery.of(context).size.width / 7,
+                                      color: Color(0xff037171))
+                                  // Image(
+                                  //     image: AssetImage('lib/assets/bio.png')),
 
-                              )),
-                    ),
-                    Flexible(
-                      flex: 1,
-                      child: Container(
-                        padding: EdgeInsets.only(
-                            top: MediaQuery.of(context).size.height / 9),
-                        child: Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: <Widget>[
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              MainPresensiPage1()));
-                                },
-                                child: Material(
-                                  borderRadius: BorderRadius.circular(10),
-                                  elevation: 9,
-                                  child: Container(
-                                    width:
-                                        MediaQuery.of(context).size.width / 3.5,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        Icon(
-                                          Icons.assignment_turned_in,
-                                          size: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              6,
-                                          color: Color(0xff037171),
-                                        ),
-                                        Text("PRESENSI",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: MediaQuery.of(context)
-                                                        .size
-                                                        .width /
-                                                    25)),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              NewRiwayatPekerjaanPage()));
-                                },
-                                child: Material(
-                                  borderRadius: BorderRadius.circular(10),
-                                  elevation: 9,
-                                  child: Container(
-                                    width:
-                                        MediaQuery.of(context).size.width / 3.5,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        Icon(
-                                          Icons.assignment,
-                                          size: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              6,
-                                          color: Color(0xff037171),
-                                        ),
-                                        Column(
+                                  )),
+                        ),
+                        Flexible(
+                          flex: 1,
+                          child: Container(
+                            padding: EdgeInsets.only(
+                                top: MediaQuery.of(context).size.height / 9),
+                            child: Center(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  MainPresensiPage1()));
+                                    },
+                                    child: Material(
+                                      borderRadius: BorderRadius.circular(10),
+                                      elevation: 9,
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                3.5,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: <Widget>[
-                                            SizedBox(
-                                              height: 5,
+                                            Icon(
+                                              Icons.assignment_turned_in,
+                                              size: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  6,
+                                              color: Color(0xff037171),
                                             ),
-                                            Text("RIWAYAT",
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w500,
-                                                    fontSize:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width /
-                                                            25)),
-                                            Text("PEKERJAAN",
+                                            Text("PRESENSI",
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.w500,
                                                     fontSize:
@@ -297,106 +254,200 @@ class _HalamanUtamaState1 extends State<HalamanUtama> {
                                                             25)),
                                           ],
                                         ),
-                                      ],
+                                      ),
                                     ),
                                   ),
-                                ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  RiwayatKerjaPage()));
+                                    },
+                                    child: Material(
+                                      borderRadius: BorderRadius.circular(10),
+                                      elevation: 9,
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                3.5,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            Icon(
+                                              Icons.assignment,
+                                              size: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  6,
+                                              color: Color(0xff037171),
+                                            ),
+                                            Column(
+                                              children: <Widget>[
+                                                SizedBox(
+                                                  height: 5,
+                                                ),
+                                                Text("RIWAYAT",
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        fontSize: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width /
+                                                            25)),
+                                                Text("PEKERJAAN",
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        fontSize: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width /
+                                                            25)),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
+                            ),
                           ),
                         ),
-                      ),
+                        Flexible(
+                          flex: 1,
+                          child: Container(
+                            padding: EdgeInsets.only(
+                                top: MediaQuery.of(context).size.height / 7),
+                            child: Center(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  GestureDetector(
+                                    onTap: () {
+                                      // Navigator.push(
+                                      //     context,
+                                      //     MaterialPageRoute(
+                                      //         builder: (context) =>
+                                      //             MainChat()));
+                                    },
+                                    child: Material(
+                                      borderRadius: BorderRadius.circular(10),
+                                      elevation: 13,
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                3.5,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            Icon(
+                                              Icons.message,
+                                              size: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  6,
+                                              color: Color(0xff037171),
+                                            ),
+                                            Text("CHATTING",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width /
+                                                            25)),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ProfilePage()));
+                                    },
+                                    child: Material(
+                                      borderRadius: BorderRadius.circular(10),
+                                      elevation: 9,
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                3.5,
+                                        // margin: EdgeInsets.only(right: 17),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            Icon(
+                                              Icons.person,
+                                              size: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  6,
+                                              color: Color(0xff037171),
+                                            ),
+                                            Text("PROFIL",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width /
+                                                            25)),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                    Flexible(
-                      flex: 1,
+                  ),
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    GestureDetector(
+                      onTap: _showDialog,
                       child: Container(
-                        padding: EdgeInsets.only(
-                            top: MediaQuery.of(context).size.height / 7),
                         child: Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: <Widget>[
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => ProfilePage()));
-                                },
-                                child: Material(
-                                  borderRadius: BorderRadius.circular(10),
-                                  elevation: 9,
-                                  child: Container(
-                                    width:
-                                        MediaQuery.of(context).size.width / 3.5,
-                                    // margin: EdgeInsets.only(right: 17),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        Icon(
-                                          Icons.person,
-                                          size: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              6,
-                                          color: Color(0xff037171),
-                                        ),
-                                        Text("PROFIL",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: MediaQuery.of(context)
-                                                        .size
-                                                        .width /
-                                                    25)),
-                                      ],
-                                    ),
-                                  ),
+                          child: Container(
+                            margin: EdgeInsets.only(bottom: 10, right: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: <Widget>[
+                                Text(
+                                  "Logout",
+                                  style: TextStyle(fontWeight: FontWeight.w600),
                                 ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  // signOut();
-                                  _showDialog();
-                                },
-                                child: Material(
-                                  borderRadius: BorderRadius.circular(10),
-                                  elevation: 13,
-                                  child: Container(
-                                    width:
-                                        MediaQuery.of(context).size.width / 3.5,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        Icon(
-                                          Icons.exit_to_app,
-                                          size: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              6,
-                                          color: Color(0xff037171),
-                                        ),
-                                        Text("LOGOUT",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: MediaQuery.of(context)
-                                                        .size
-                                                        .width /
-                                                    25)),
-                                      ],
-                                    ),
-                                  ),
+                                Icon(
+                                  Icons.exit_to_app,
+                                  color: Color(0xff037171),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ],
-                ),
-              ),
+                )
+              ],
             ),
           ],
         ),

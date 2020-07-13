@@ -1,4 +1,4 @@
-package com.example.sapubersih
+package com.sapubersih.jepara
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity

@@ -91,7 +91,6 @@ class _LoginPageKuState extends State<LoginPageKu> {
         .post(BaseUrl.login, body: {"no_thl": "$usn", "password": "$pass"});
 
     final data = jsonDecode(response.body);
-    print(response.statusCode);
 
     Future.delayed(Duration(milliseconds: 500), () async {
       int value = data['value'];
@@ -201,7 +200,7 @@ class _LoginPageKuState extends State<LoginPageKu> {
       text: TextSpan(
           text: 'S',
           style: GoogleFonts.portLligatSans(
-            textStyle: Theme.of(context).textTheme.display1,
+            textStyle: Theme.of(context).textTheme.headline1,
             fontSize: 30,
             fontWeight: FontWeight.w700,
             color: Color(0xff00b9ae),

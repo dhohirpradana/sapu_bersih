@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:sapubersih/Pages/boot/boot_screen.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,15 +26,28 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-
+    checkCameraPermissions();
     OneSignal.shared
         .setNotificationReceivedHandler((OSNotification notification) {
+      print('notif masuk');
     });
 
     OneSignal.shared
         .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
       print("di Tap");
     });
+  }
+
+  static Future<bool> checkCameraPermissions() async {
+    PermissionStatus status = await Permission.camera.status;
+    if (status.isUndetermined || status.isDenied) {
+      print('cam is denied or undetermined'); //Prints
+      PermissionStatus newStatus = await Permission.camera.request();
+      print(await Permission.camera.isDenied); //Prints 'true' immediately
+      if (newStatus.isDenied) return false;
+      print('cam is approved!'); //Nope QQ
+    }
+    return true;
   }
 
   @override
