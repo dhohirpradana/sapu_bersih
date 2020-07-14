@@ -1,14 +1,11 @@
 import 'dart:async';
-import 'dart:io';
-
 import 'package:android_intent/android_intent.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:sapubersih/Pages/chat/main_chat.dart';
+import 'package:sapubersih/Pages/chat/chat_page.dart';
 import 'package:sapubersih/Pages/riwayat/riwayat_pekerjaan.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sapubersih/Pages/presensi/main_absen.dart';
@@ -28,13 +25,11 @@ class _HalamanUtamaState1 extends State<HalamanUtama> {
     });
   }
 
-  int id;
   String name, token;
   getPref() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
       name = preferences.getString("name");
-      id = preferences.getInt("id");
       token = preferences.getString("token");
     });
   }
@@ -331,11 +326,11 @@ class _HalamanUtamaState1 extends State<HalamanUtama> {
                                 children: <Widget>[
                                   GestureDetector(
                                     onTap: () {
-                                      // Navigator.push(
-                                      //     context,
-                                      //     MaterialPageRoute(
-                                      //         builder: (context) =>
-                                      //             MainChat()));
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ChatPage()));
                                     },
                                     child: Material(
                                       borderRadius: BorderRadius.circular(10),

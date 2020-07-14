@@ -244,7 +244,7 @@ class _LoginPageKuState extends State<LoginPageKu> {
                       new BlacklistingTextInputFormatter(
                           new RegExp('[\\.|\\,]')),
                     ],
-                    keyboardType: TextInputType.number,
+                    keyboardType: TextInputType.text,
                     validator: (e) {
                       if (e.isEmpty) {
                         return "no THL tidak boleh kosong";

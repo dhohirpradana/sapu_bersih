@@ -53,6 +53,7 @@ dependencies:
   cached_network_image: ^2.2.0+1
   flutter_slidable: ^0.5.4
   shimmer: ^1.1.1
+  chat_list: ^1.0.1
 
 dev_dependencies:
   flutter_test:
@@ -87,6 +88,12 @@ flutter:
   - assets/bukan-masanya-mengisi-presensi1593390112.mp3
   - assets/anda-belum-memasukan-foto1593391851.mp3
   - assets/Nomor-teha-el-atau-password-sa1593903159.mp3
+  - assets/bukan-masanya-mengisi-presensi_lembur_pulang.mp3
+  - assets/anda-sudah-mengisi-presensi-lembur_pulang.mp3
+  - assets/anda-sudah-mengisi-presensi-pulang.mp3
+  - assets/berhasil-mengisi-presensi-lembur_pulang.mp3
+  - assets/berhasil-mengisi-presensi-pulang.mp3
+  - assets/bukan-masanya-mengisi-presensi_pulang.mp3
   #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

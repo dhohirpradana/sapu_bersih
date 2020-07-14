@@ -19,6 +19,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sapubersih/api/api.dart';
 
+import '../login_page.dart';
+
 class PerekamanLemburPage extends StatefulWidget {
   @override
   _PerekamanPageState createState() => _PerekamanPageState();
@@ -33,6 +35,7 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
     getUserLocation();
     getPref();
   }
+//Proses//
 
   getCam() {
     availableCameras().then((availableCameras) {
@@ -40,7 +43,9 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
       if (cameras.length > 0) {
         setState(() {
           // 2
-          isLoading = 0;
+          Future.delayed(Duration(milliseconds: 200), () {
+            isLoading = 0;
+          });
           selectedCameraIdx = 1;
         });
 
@@ -55,152 +60,6 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
       Navigator.pop(context);
     });
   }
-
-  int id;
-  String token;
-  getPref() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    setState(() {
-      id = preferences.getInt("id");
-      token = preferences.getString("token");
-    });
-  }
-
-  resetSavePref(int value) async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    setState(() {
-      preferences.setInt("value", value);
-    });
-  }
-
-  File imageFile;
-  List<File> _imageList = [];
-
-  //CameraOnApp
-  //Camera
-  void onCapturePressed(context) async {
-    try {
-      // 1
-      final path = pathF.join(
-        (await getTemporaryDirectory()).path,
-        '${DateTime.now()}.png',
-      );
-      imageFile = File(path);
-      // 2
-      await controller.takePicture(path);
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  CameraController controller;
-  List cameras;
-  int selectedCameraIdx;
-  String imagePath;
-
-  Future _initCameraController(CameraDescription cameraDescription) async {
-    if (controller != null) {
-      await controller.dispose();
-    }
-
-    // 3
-    controller = CameraController(cameraDescription, ResolutionPreset.high);
-
-    // If the controller is updated then update the UI.
-    // 4
-    controller.addListener(() {
-      // 5
-      if (mounted) {
-        setState(() {});
-      }
-
-      if (controller.value.hasError) {
-        print('Camera error ${controller.value.errorDescription}');
-        Navigator.pop(context);
-      }
-    });
-
-    // 6
-    try {
-      await controller.initialize();
-    } on CameraException catch (e) {
-      // _showCameraException(e);
-    }
-
-    if (mounted) {
-      setState(() {});
-    }
-  }
-
-  Widget _cameraPreviewWidget() {
-    if (controller == null || !controller.value.isInitialized) {
-      return const Text(
-        'Loading',
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 20.0,
-          fontWeight: FontWeight.w900,
-        ),
-      );
-    }
-    return AspectRatio(
-      aspectRatio: controller.value.aspectRatio,
-      child: CameraPreview(controller),
-    );
-  }
-
-//Camera
-  @override
-  Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    final deviceRatio = size.width / size.height;
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: isLoading == 1
-          ? Container(
-              child: Center(
-                child: CircularProgressIndicator(),
-              ),
-            )
-          : Center(
-              child: Stack(
-                children: <Widget>[
-                  Transform.scale(
-                      scale: controller.value.aspectRatio / deviceRatio,
-                      child: _cameraPreviewWidget()),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      Container(
-                        height: MediaQuery.of(context).size.height / 17,
-                        width: (MediaQuery.of(context).size.width),
-                        color: Color(0xff037171),
-                        child: Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Text(
-                                "KIRIM",
-                                style: TextStyle(
-                                    fontSize:
-                                        MediaQuery.of(context).size.width / 21,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w600),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      gmaps()
-                    ],
-                  )
-                ],
-              ),
-            ),
-    );
-  }
-
-  final _key = new GlobalKey<FormState>();
 
   String lokasiku_locality,
       lokasiku_admin_area,
@@ -251,6 +110,207 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
   }
 
   Set<Marker> markers = Set();
+
+  int id;
+  String token;
+  getPref() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      id = preferences.getInt("id");
+      token = preferences.getString("token");
+    });
+  }
+
+  resetSavePref(int value) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      preferences.setInt("value", value);
+    });
+  }
+
+  File imageFile;
+  List<File> _imageList = [];
+
+  //CameraOnApp
+  //Camera
+  void onCapturePressed() async {
+    try {
+      // 1
+      final path = pathF.join(
+        (await getTemporaryDirectory()).path,
+        '${DateTime.now()}.png',
+      );
+      _imageList.add(File(path));
+      // 2
+      await controller.takePicture(path);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  signOut() async {
+    SharedPreferences preference = await SharedPreferences.getInstance();
+    setState(() {
+      preference.setInt("value", null);
+    });
+  }
+
+  void _resetState() {
+    setState(() {
+      imageFile = null;
+    });
+  }
+
+  Future<Null> _uploadImage() async {
+    Navigator.of(context).pop();
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return WillPopScope(
+          onWillPop: () {},
+          child: Dialog(
+            child: new Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                    margin: EdgeInsets.all(10),
+                    child: CircularProgressIndicator()),
+                new Text("Mengunggah Presensi Lembur..."),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+    if (_imageList.length != 0) {
+      _imageList.forEach((f) async {
+        // Find the mime type of the selected file by looking at the header bytes of the file
+        final mimeTypeData =
+            lookupMimeType(f.path, headerBytes: [0xFF, 0xD8]).split('/');
+        // Intilize the multipart request
+        final imageUploadRequest =
+            http.MultipartRequest('POST', Uri.parse(BaseUrl.lembur));
+        // Attach the file in the request
+        Timer(Duration(seconds: 1), () async {
+          final file = await http.MultipartFile.fromPath('image', f.path,
+              contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
+          imageUploadRequest.headers['authorization'] = 'Bearer $token';
+          imageUploadRequest.headers['content-type'] = 'multipart/form-data';
+          imageUploadRequest.fields['ext'] = mimeTypeData[1];
+          imageUploadRequest.fields['latitude'] = mylat.toString();
+          imageUploadRequest.fields['longtitude'] = mylon.toString();
+          imageUploadRequest.fields['lokasi'] = lokasiku_addressline.toString();
+          imageUploadRequest.files.add(file);
+          try {
+            final streamedResponse = await imageUploadRequest.send();
+            final response = await http.Response.fromStream(streamedResponse);
+            if (response.statusCode == 200) {
+              final data = json.decode(response.body);
+              int value = data['value'];
+              if (value == 2) {
+                setState(() {
+                  _imageList.clear();
+                });
+
+                AudioCache player = AudioCache();
+                player.play('anda-sudah-mengisi-presensi-le1593390205.mp3');
+
+                Fluttertoast.showToast(
+                    msg: "ANDA SUDAH MENGISI PRESENSI LEMBUR",
+                    toastLength: Toast.LENGTH_LONG,
+                    gravity: ToastGravity.BOTTOM,
+                    timeInSecForIos: 1,
+                    backgroundColor: Colors.green.withOpacity(0.9),
+                    textColor: Colors.white,
+                    fontSize: 16.0);
+                Navigator.pop(context);
+                Navigator.pop(context);
+              } else if (value == 1) {
+                setState(() {
+                  _imageList.clear();
+                });
+
+                AudioCache player = AudioCache();
+                player.play('berhasil-mengisi-presensi-lemb1593390158.mp3');
+
+                Fluttertoast.showToast(
+                    msg: "BERHASIL MENGISI PRESENSI LEMBUR",
+                    toastLength: Toast.LENGTH_LONG,
+                    gravity: ToastGravity.BOTTOM,
+                    timeInSecForIos: 1,
+                    backgroundColor: Colors.blue.withOpacity(0.9),
+                    textColor: Colors.white,
+                    fontSize: 16.0);
+                Navigator.pop(context);
+                Navigator.pop(context);
+              } else if (value == 0) {
+                AudioCache player = AudioCache();
+                player.play('bukan-masanya-mengisi-presensi1593390112.mp3');
+
+                Fluttertoast.showToast(
+                    msg: "BUKAN MASANYA MENGISI PRESENSI LEMBUR",
+                    toastLength: Toast.LENGTH_LONG,
+                    gravity: ToastGravity.BOTTOM,
+                    timeInSecForIos: 1,
+                    backgroundColor: Colors.red.withOpacity(0.9),
+                    textColor: Colors.white,
+                    fontSize: 16.0);
+                Navigator.pop(context);
+              } else {
+                AudioCache player = AudioCache();
+                player.play('your-turn.mp3');
+
+                Fluttertoast.showToast(
+                    msg: "SISTEM SEDANG MAIN TENIS",
+                    toastLength: Toast.LENGTH_LONG,
+                    gravity: ToastGravity.TOP,
+                    timeInSecForIos: 1,
+                    backgroundColor: Colors.red.withOpacity(0.9),
+                    textColor: Colors.white,
+                    fontSize: 16.0);
+                Navigator.pop(context);
+              }
+              final Map<String, dynamic> responseData =
+                  json.decode(response.body);
+              _resetState();
+              return responseData;
+            } else {
+              setState(() {
+                resetSavePref(0);
+              });
+              signOut();
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => LoginPageKu()),
+                ModalRoute.withName("/LoginPage"),
+              );
+            }
+          } catch (e) {
+            print(e);
+            return null;
+          }
+        });
+      });
+    } else {
+      AudioCache player = AudioCache();
+      player.play('anda-belum-memasukan-foto1593391851.mp3');
+
+      Fluttertoast.showToast(
+          msg: "MASUKAN FOTO",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 1,
+          backgroundColor: Colors.black.withOpacity(0.9),
+          textColor: Colors.white,
+          fontSize: 16.0);
+      Navigator.pop(context);
+    }
+  }
+
+//Builder//
+
+//gmaps
 
   Widget gmaps() {
     markers.addAll([
@@ -369,262 +429,141 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
     );
   }
 
-  void _getImage(BuildContext context, ImageSource source) async {
-    File image = await ImagePicker.pickImage(
-        source: ImageSource.camera, imageQuality: 50);
+//Camera
+  CameraController controller;
+  List cameras;
+  int selectedCameraIdx;
+  String imagePath;
 
-    if (image != null) {
-      setState(() {
-        _imageList.add(image);
-      });
+  Future _initCameraController(CameraDescription cameraDescription) async {
+    if (controller != null) {
+      await controller.dispose();
     }
-    // jika di cancel
-  }
 
-  Future<Null> _uploadImage() async {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return WillPopScope(
-          onWillPop: () {},
-          child: Dialog(
-            child: new Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                    margin: EdgeInsets.all(10),
-                    child: CircularProgressIndicator()),
-                new Text("Mengunggah Presensi Lembur..."),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-    if (_imageList.length != 0) {
-      _imageList.forEach((f) async {
-        // Find the mime type of the selected file by looking at the header bytes of the file
-        final mimeTypeData =
-            lookupMimeType(f.path, headerBytes: [0xFF, 0xD8]).split('/');
-        // Intilize the multipart request
-        final imageUploadRequest =
-            http.MultipartRequest('POST', Uri.parse(BaseUrl.lembur));
-        // Attach the file in the request
-        Timer(Duration(seconds: 1), () async {
-          final file = await http.MultipartFile.fromPath('image', f.path,
-              contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
-          imageUploadRequest.headers['authorization'] = 'Bearer $token';
-          imageUploadRequest.headers['content-type'] = 'multipart/form-data';
-          imageUploadRequest.fields['ext'] = mimeTypeData[1];
-          imageUploadRequest.fields['latitude'] = mylat.toString();
-          imageUploadRequest.fields['longtitude'] = mylon.toString();
-          imageUploadRequest.fields['lokasi'] = lokasiku_addressline.toString();
-          imageUploadRequest.files.add(file);
-          try {
-            final streamedResponse = await imageUploadRequest.send();
-            final response = await http.Response.fromStream(streamedResponse);
-            if (response.statusCode == 200) {
-              final data = json.decode(response.body);
-              int value = data['value'];
-              if (value == 2) {
-                setState(() {
-                  _imageList.clear();
-                });
+    // 3
+    controller = CameraController(cameraDescription, ResolutionPreset.high);
 
-                AudioCache player = AudioCache();
-                player.play('anda-sudah-mengisi-presensi-le1593390205.mp3');
+    // If the controller is updated then update the UI.
+    // 4
+    controller.addListener(() {
+      // 5
+      if (mounted) {
+        setState(() {});
+      }
 
-                Fluttertoast.showToast(
-                    msg: "ANDA SUDAH MENGISI PRESENSI LEMBUR",
-                    toastLength: Toast.LENGTH_LONG,
-                    gravity: ToastGravity.BOTTOM,
-                    timeInSecForIos: 1,
-                    backgroundColor: Colors.green.withOpacity(0.9),
-                    textColor: Colors.white,
-                    fontSize: 16.0);
-                Navigator.pop(context);
-                Navigator.pop(context);
-              } else if (value == 1) {
-                setState(() {
-                  _imageList.clear();
-                });
+      if (controller.value.hasError) {
+        print('Camera error ${controller.value.errorDescription}');
+        Navigator.pop(context);
+      }
+    });
 
-                AudioCache player = AudioCache();
-                player.play('berhasil-mengisi-presensi-lemb1593390158.mp3');
+    // 6
+    try {
+      await controller.initialize();
+    } on CameraException catch (_) {
+      // _showCameraException(e);
+    }
 
-                Fluttertoast.showToast(
-                    msg: "BERHASIL MENGISI PRESENSI LEMBUR",
-                    toastLength: Toast.LENGTH_LONG,
-                    gravity: ToastGravity.BOTTOM,
-                    timeInSecForIos: 1,
-                    backgroundColor: Colors.blue.withOpacity(0.9),
-                    textColor: Colors.white,
-                    fontSize: 16.0);
-                Navigator.pop(context);
-                Navigator.pop(context);
-              } else if (value == 0) {
-                AudioCache player = AudioCache();
-                player.play('bukan-masanya-mengisi-presensi1593390112.mp3');
-
-                Fluttertoast.showToast(
-                    msg: "BUKAN MASANYA MENGISI PRESENSI LEMBUR",
-                    toastLength: Toast.LENGTH_LONG,
-                    gravity: ToastGravity.BOTTOM,
-                    timeInSecForIos: 1,
-                    backgroundColor: Colors.red.withOpacity(0.9),
-                    textColor: Colors.white,
-                    fontSize: 16.0);
-                Navigator.pop(context);
-              } else {
-                AudioCache player = AudioCache();
-                player.play('your-turn.mp3');
-
-                Fluttertoast.showToast(
-                    msg: "SISTEM SEDANG MAIN TENIS",
-                    toastLength: Toast.LENGTH_LONG,
-                    gravity: ToastGravity.TOP,
-                    timeInSecForIos: 1,
-                    backgroundColor: Colors.red.withOpacity(0.9),
-                    textColor: Colors.white,
-                    fontSize: 16.0);
-                Navigator.pop(context);
-              }
-              final Map<String, dynamic> responseData =
-                  json.decode(response.body);
-              _resetState();
-              return responseData;
-            } else {
-              setState(() {
-                resetSavePref(0);
-              });
-              signOut();
-            }
-          } catch (e) {
-            print(e);
-            return null;
-          }
-        });
-      });
-    } else {
-      AudioCache player = AudioCache();
-      player.play('anda-belum-memasukan-foto1593391851.mp3');
-
-      Fluttertoast.showToast(
-          msg: "MASUKAN FOTO",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIos: 1,
-          backgroundColor: Colors.black.withOpacity(0.9),
-          textColor: Colors.white,
-          fontSize: 16.0);
-      Navigator.pop(context);
+    if (mounted) {
+      setState(() {});
     }
   }
 
-  signOut() async {
-    SharedPreferences preference = await SharedPreferences.getInstance();
-    setState(() {
-      preference.setInt("value", null);
-    });
-  }
-
-  void _resetState() {
-    setState(() {
-      imageFile = null;
-    });
-  }
-
-  simpan() async {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return WillPopScope(
-          onWillPop: () {},
-          child: Dialog(
-            child: new Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                    margin: EdgeInsets.all(10),
-                    child: CircularProgressIndicator()),
-                new Text("Menyimpan data pengajuan"),
-              ],
-            ),
-          ),
-        );
-      },
+  Widget _cameraPreviewWidget() {
+    if (controller == null || !controller.value.isInitialized) {
+      return const Text(
+        'Loading',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 20.0,
+          fontWeight: FontWeight.w900,
+        ),
+      );
+    }
+    return AspectRatio(
+      aspectRatio: controller.value.aspectRatio,
+      child: CameraPreview(controller),
     );
   }
 
-  Widget _dataUploadFoto() {
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Column(
-            children: <Widget>[
-              Column(
+//Camera
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final deviceRatio = size.width / size.height;
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: isLoading == 1
+          ? Container(
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            )
+          : Center(
+              child: Stack(
                 children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  Transform.scale(
+                      scale: controller.value.aspectRatio / deviceRatio,
+                      child: _cameraPreviewWidget()),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            top: 0.0, left: 0.0, right: 0.0),
-                        child: _imageList.length > 0
-                            ? Stack(
-                                children: <Widget>[
-                                  Image.file(
-                                    _imageList[0],
-                                    fit: BoxFit.cover,
-                                    height: MediaQuery.of(context).size.height -
-                                        MediaQuery.of(context).size.height / 3,
-                                    // alignment: Alignment.topCenter,
-                                    width: MediaQuery.of(context).size.width,
+                      GestureDetector(
+                        onTap: () {
+                          onCapturePressed();
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              // return object of type Dialog
+                              return AlertDialog(
+                                title: Text("Kirim Presensi ?"),
+                                actions: <Widget>[
+                                  // usually buttons at the bottom of the dialog
+                                  FlatButton(
+                                    child: Text("Ulangi"),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
                                   ),
-                                  IconButton(
-                                      icon: Icon(Icons.delete_forever,
-                                          size: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              13,
-                                          color: Colors.red),
-                                      onPressed: () {
-                                        setState(() {
-                                          _imageList.removeAt(0);
-                                        });
-                                      })
+                                  FlatButton(
+                                    child: Text("Kirim"),
+                                    onPressed: () {
+                                      _uploadImage();
+                                    },
+                                  ),
                                 ],
-                              )
-                            : OutlineButton(
-                                onPressed: () {},
-                                child: Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  height: MediaQuery.of(context).size.height -
-                                      MediaQuery.of(context).size.height / 3,
-                                  child: IconButton(
-                                    icon: Icon(
-                                      Icons.add_a_photo,
-                                      size:
-                                          MediaQuery.of(context).size.width / 5,
-                                      color: Colors.green.withOpacity(0.7),
-                                    ),
-                                    onPressed: () =>
-                                        _getImage(context, ImageSource.camera),
-                                  ),
+                              );
+                            },
+                          );
+                        },
+                        child: Container(
+                          height: MediaQuery.of(context).size.height / 17,
+                          width: (MediaQuery.of(context).size.width),
+                          color: Color(0xff037171),
+                          child: Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Text(
+                                  "KIRIM",
+                                  style: TextStyle(
+                                      fontSize:
+                                          MediaQuery.of(context).size.width /
+                                              21,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600),
                                 ),
-                              ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
+                      gmaps()
                     ],
                   )
                 ],
-              )
-            ],
-          ),
-        ],
-      ),
+              ),
+            ),
     );
   }
 }

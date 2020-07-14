@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:sapubersih/Pages/boot/boot_screen.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,9 +24,19 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  String token;
+  getPref() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      token = preferences.getString("token");
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    getPref();
+    OneSignal.shared.setExternalUserId(token);
     checkCameraPermissions();
     OneSignal.shared
         .setNotificationReceivedHandler((OSNotification notification) {

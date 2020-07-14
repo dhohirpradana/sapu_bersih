@@ -20,12 +20,12 @@ import 'package:sapubersih/api/api.dart';
 
 import '../login_page.dart';
 
-class AbsenPage extends StatefulWidget {
+class AbsenLemburPulangPage extends StatefulWidget {
   @override
-  _AbsenPage createState() => _AbsenPage();
+  _AbsenLemburPulangPage createState() => _AbsenLemburPulangPage();
 }
 
-class _AbsenPage extends State<AbsenPage> {
+class _AbsenLemburPulangPage extends State<AbsenLemburPulangPage> {
   @override
   void initState() {
     super.initState();
@@ -189,7 +189,7 @@ class _AbsenPage extends State<AbsenPage> {
             lookupMimeType(f.path, headerBytes: [0xFF, 0xD8]).split('/');
         // Intilize the multipart request
         final imageUploadRequest =
-            http.MultipartRequest('POST', Uri.parse(BaseUrl.reguler));
+            http.MultipartRequest('POST', Uri.parse(BaseUrl.lemburPulang));
         // Attach the file in the request
         Timer(Duration(seconds: 1), () async {
           final file = await http.MultipartFile.fromPath('image', f.path,
@@ -213,10 +213,10 @@ class _AbsenPage extends State<AbsenPage> {
                 });
 
                 AudioCache player = AudioCache();
-                player.play('anda-sudah-mengisi-presensi1593390220.mp3');
+                player.play('anda-sudah-mengisi-presensi-lembur_pulang.mp3');
 
                 Fluttertoast.showToast(
-                    msg: "ANDA SUDAH MENGISI PRESENSI",
+                    msg: "ANDA SUDAH MENGISI PRESENSI LEMBUR PULANG",
                     toastLength: Toast.LENGTH_LONG,
                     gravity: ToastGravity.BOTTOM,
                     timeInSecForIos: 1,
@@ -231,10 +231,10 @@ class _AbsenPage extends State<AbsenPage> {
                 });
 
                 AudioCache player = AudioCache();
-                player.play('anda-sudah-mengisi-presensi1593390220.mp3');
+                player.play('berhasil-mengisi-presensi-lembur_pulang.mp3');
 
                 Fluttertoast.showToast(
-                    msg: "BERHASIL MENGISI PRESENSI",
+                    msg: "BERHASIL MENGISI PRESENSI LEMBUR PULANG",
                     toastLength: Toast.LENGTH_LONG,
                     gravity: ToastGravity.BOTTOM,
                     timeInSecForIos: 1,
@@ -245,10 +245,10 @@ class _AbsenPage extends State<AbsenPage> {
                 Navigator.pop(context);
               } else if (value == 0) {
                 AudioCache player = AudioCache();
-                player.play('bukan-masanya-mengisi-presensi1593389995.mp3');
+                player.play('bukan-masanya-mengisi-presensi_lembur_pulang.mp3');
 
                 Fluttertoast.showToast(
-                    msg: "BUKAN MASANYA MENGISI PRESENSI",
+                    msg: "BUKAN MASANYA MENGISI PRESENSI LEMBUR PULANG",
                     toastLength: Toast.LENGTH_LONG,
                     gravity: ToastGravity.BOTTOM,
                     timeInSecForIos: 1,
