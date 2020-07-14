@@ -9,5 +9,5 @@ class BaseUrl {
   static String profile = "$ip/api/profile";
   static String riwayat = "$ip/api/lokasi_terkini";
   static String image = "$ip/storage/presensi";
-  static String chat = "$ip/chat";
+  static String chat = "$ip/api/chat";
 }

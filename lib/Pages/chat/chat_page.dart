@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:chat_list/chat_list.dart';
 import 'package:flutter/material.dart';
+import 'package:sapubersih/Pages/notifikasi/pengumuman_page.dart';
 import 'package:sapubersih/api/api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -39,6 +40,29 @@ class _ChatChildState extends State<ChatChild> {
       name = preferences.getString("name");
       token = preferences.getString("token");
     });
+    fetchMessageData();
+  }
+
+  Future<void> sendMessage() async {
+    final response = await http.post(
+      BaseUrl.chat,
+      body: {"message": msg.toString()},
+      headers: {HttpHeaders.authorizationHeader: "Bearer $token"},
+    );
+    if (response.statusCode == 200) {
+      _controller.clear();
+      focusNode.unfocus();
+      setState(() {
+        _messageList.add(MessageWidget(
+          content: msg.toString(),
+          ownerType: OwnerType.receiver,
+          ownerName: "Saya",
+        ));
+      });
+    } else {
+      setState(() {});
+      print(response.statusCode);
+    }
   }
 
   Future<void> fetchMessageData() async {
@@ -50,118 +74,52 @@ class _ChatChildState extends State<ChatChild> {
       },
     );
     if (response.statusCode != 200) {
-      print("Failed ");
-      print(token);
-      print(response.body);
+      print(response.statusCode);
+      Navigator.pop(context);
     } else {
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
-
-      extractedData.forEach((id, messageData) {
-        _messageList.add(MessageWidget(
-          content: "halo bos",
-          ownerType: OwnerType.sender,
-          ownerName: "Saya",
-        ));
+      Future.delayed(Duration(seconds: 0), () {
+        if (extractedData["data"]["data"].length < 1) {
+          setState(() {
+            isLoading = 0;
+          });
+        } else {
+          for (var i = 0; i < extractedData["data"]["data"].length; i++) {
+            _messageList.add(MessageWidget(
+              content: extractedData["data"]["data"][i]["text"],
+              ownerType: (extractedData["data"]["data"][i]["admin_id"] != null)
+                  ? OwnerType.sender
+                  : OwnerType.receiver,
+              ownerName: (extractedData["data"]["data"][i]["admin_id"] != null)
+                  ? "Admin"
+                  : "Saya",
+            ));
+            setState(() {
+              isLoading = 0;
+            });
+          }
+        }
       });
-      print(json.decode(response.body));
     }
   }
 
+  String msg;
+  var _controller = TextEditingController();
+  final focusNode = FocusNode();
+
   final List<MessageWidget> _messageList = [];
 
-  addList() {
-    _messageList.add(MessageWidget(
-      content:
-          "Assalamualailkum Wr Wb, \nPak hari iki saya ijin dikarenakan bla3x",
-      ownerType: OwnerType.receiver,
-      ownerName: "Saya",
-    ));
-    _messageList.add(MessageWidget(
-      content: "Oiya pak",
-      ownerType: OwnerType.sender,
-      ownerName: "Admin",
-    ));
-    _messageList.add(MessageWidget(
-      content: "Terimakasih pak",
-      ownerType: OwnerType.receiver,
-      ownerName: "Saya",
-    ));
-    _messageList.add(MessageWidget(
-      content: "Sama-sama pak",
-      ownerType: OwnerType.sender,
-      ownerName: "Admin",
-    ));
-    _messageList.add(MessageWidget(
-      content:
-          "Assalamualailkum Wr Wb, \nPak hari iki saya ijin dikarenakan bla3x",
-      ownerType: OwnerType.receiver,
-      ownerName: "Saya",
-    ));
-    _messageList.add(MessageWidget(
-      content: "Oiya pak",
-      ownerType: OwnerType.sender,
-      ownerName: "Admin",
-    ));
-    _messageList.add(MessageWidget(
-      content: "Terimakasih pak",
-      ownerType: OwnerType.receiver,
-      ownerName: "Saya",
-    ));
-    _messageList.add(MessageWidget(
-      content: "Sama-sama pak",
-      ownerType: OwnerType.sender,
-      ownerName: "Admin",
-    ));
-    _messageList.add(MessageWidget(
-      content:
-          "Assalamualailkum Wr Wb, \nPak hari iki saya ijin dikarenakan bla3x",
-      ownerType: OwnerType.receiver,
-      ownerName: "Saya",
-    ));
-    _messageList.add(MessageWidget(
-      content: "Oiya pak",
-      ownerType: OwnerType.sender,
-      ownerName: "Admin",
-    ));
-    _messageList.add(MessageWidget(
-      content: "Terimakasih pak",
-      ownerType: OwnerType.receiver,
-      ownerName: "Saya",
-    ));
-    _messageList.add(MessageWidget(
-      content: "Sama-sama pak",
-      ownerType: OwnerType.sender,
-      ownerName: "Admin",
-    ));
-    _messageList.add(MessageWidget(
-      content:
-          "Assalamualailkum Wr Wb, \nPak hari iki saya ijin dikarenakan bla3x",
-      ownerType: OwnerType.receiver,
-      ownerName: "Saya",
-    ));
-    _messageList.add(MessageWidget(
-      content: "Oiya pak",
-      ownerType: OwnerType.sender,
-      ownerName: "Admin",
-    ));
-    _messageList.add(MessageWidget(
-      content: "Terimakasih pak",
-      ownerType: OwnerType.receiver,
-      ownerName: "Saya",
-    ));
-    _messageList.add(MessageWidget(
-      content: "Sama-sama pak",
-      ownerType: OwnerType.sender,
-      ownerName: "Admin",
-    ));
-  }
-
+  int isLoading;
   @override
   void initState() {
     super.initState();
     getPref();
-    fetchMessageData();
-    addList();
+    isLoading = 1;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   int flex1 = 1;
@@ -186,20 +144,32 @@ class _ChatChildState extends State<ChatChild> {
         ),
         body: Stack(
           children: <Widget>[
-            Container(
-                margin: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).size.height / 9),
-                child: ChatList(children: _messageList)),
+            (isLoading == 1)
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : Container(
+                    margin: EdgeInsets.only(
+                        bottom: MediaQuery.of(context).size.height / 9,
+                        top: 19),
+                    child: ChatList(children: _messageList)),
             Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 Container(
+                  width: MediaQuery.of(context).size.width * 8 / 9,
+                  margin: EdgeInsets.only(bottom: 2),
                   color: Colors.white,
                   padding: EdgeInsets.all(5),
                   child: TextFormField(
+                    focusNode: focusNode,
+                    controller: _controller,
+                    onSaved: (e) => msg = e,
+                    onChanged: (e) {
+                      msg = e;
+                    },
                     decoration: InputDecoration(
                         hintText: "Tulis pesan",
-                        suffixIcon: Icon(Icons.send),
                         border: OutlineInputBorder(
                             borderSide: new BorderSide(color: Colors.teal)),
                         labelText: ''),
@@ -207,6 +177,74 @@ class _ChatChildState extends State<ChatChild> {
                 ),
               ],
             ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PengumumanPage()));
+                  },
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(20),
+                      bottomRight: Radius.circular(20)),
+                  child: Material(
+                    borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(20),
+                        bottomRight: Radius.circular(20)),
+                    elevation: 2,
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 9.7 / 10,
+                      padding: EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                          color: Colors.yellow[100],
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(20),
+                              bottomRight: Radius.circular(20))),
+                      child: Center(
+                          child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            "LIHAT PENGUMUMAN ",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xff037171)),
+                          ),
+                          Icon(
+                            Icons.info_outline,
+                            color: Color(0xff037171),
+                          )
+                        ],
+                      )),
+                    ),
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.only(bottom: 15, right: 5),
+                      child: IconButton(
+                        highlightColor: Colors.blue.withOpacity(0.1),
+                        icon: Icon(
+                          Icons.send,
+                          color: Color(0xff037171),
+                          size: 30,
+                        ),
+                        onPressed: (msg == null)
+                            ? () {}
+                            : () {
+                                sendMessage();
+                              },
+                      ),
+                    )
+                  ],
+                )
+              ],
+            )
           ],
         ));
   }

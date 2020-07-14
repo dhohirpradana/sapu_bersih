@@ -10,7 +10,6 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http_parser/http_parser.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:mime/mime.dart';
@@ -31,7 +30,6 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
   void initState() {
     super.initState();
     lokasiku_throughfare = "Mendapatkan Lokasi...";
-    getCam();
     getUserLocation();
     getPref();
   }
@@ -82,13 +80,16 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
       if (e.code == 'PERMISSION_DENIED') {
         error = 'please grant permission';
         print(error);
+        Navigator.of(context).pop();
       }
       if (e.code == 'PERMISSION_DENIED_NEVER_ASK') {
         error = 'permission denied- please enable it from app settings';
         print(error);
+        Navigator.of(context).pop();
       }
       myLocation = null;
     }
+    getCam();
     final coordinates =
         new Coordinates(myLocation.latitude, myLocation.longitude);
     var addresses =
@@ -106,7 +107,6 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
       mylat = myLocation.latitude;
       mylon = myLocation.longitude;
     });
-    return first;
   }
 
   Set<Marker> markers = Set();
@@ -170,13 +170,13 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
         return WillPopScope(
           onWillPop: () {},
           child: Dialog(
-            child: new Row(
+            child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
                     margin: EdgeInsets.all(10),
                     child: CircularProgressIndicator()),
-                new Text("Mengunggah Presensi Lembur..."),
+                Text("Mengunggah Presensi..."),
               ],
             ),
           ),
@@ -516,7 +516,7 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
                             builder: (BuildContext context) {
                               // return object of type Dialog
                               return AlertDialog(
-                                title: Text("Kirim Presensi ?"),
+                                title: Text("Kirim Presensi Lembur ?"),
                                 actions: <Widget>[
                                   // usually buttons at the bottom of the dialog
                                   FlatButton(

@@ -1,6 +1,9 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:sapubersih/Pages/presensi/absen_lembur_page.dart';
 import 'package:sapubersih/Pages/presensi/absen_lembur_pulang_page.dart';
 import 'package:sapubersih/Pages/presensi/absen_reguler_page.dart';
+import '../login_page.dart';
 import 'absen_reguler_pulang_page.dart';
 
 class MainPresensiPage1 extends StatefulWidget {
@@ -9,6 +12,36 @@ class MainPresensiPage1 extends StatefulWidget {
 }
 
 class _MainAbsenPageState1 extends State<MainPresensiPage1> {
+  @override
+  void initState() {
+    super.initState();
+    getCam();
+  }
+
+  //proses
+  getCam() {
+    availableCameras().then((availableCameras) {
+      if (availableCameras.length > 0) {
+      } else {
+        print("No camera available");
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => LoginPageKu()),
+          ModalRoute.withName("/Home"),
+        );
+      }
+    }).catchError((err) {
+      // 3
+      print('Error: $err.code\nError Message: $err.message');
+      print("No camera available");
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => LoginPageKu()),
+        ModalRoute.withName("/Home"),
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -111,7 +144,7 @@ class _MainAbsenPageState1 extends State<MainPresensiPage1> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => AbsenPulangPage()));
+                          builder: (context) => PerekamanLemburPage()));
                 },
                 splashColor: Colors.lightGreenAccent,
                 child: Container(

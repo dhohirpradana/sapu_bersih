@@ -83,7 +83,7 @@ class _RiwayatKerjaPageState extends State<RiwayatKerjaPage> {
               child: CircularProgressIndicator(),
             )
           : Material(
-              child: (data == null)
+              child: (data["data"].length < 1)
                   ? Center(
                       child: Text(
                         "Belum Ada Data",

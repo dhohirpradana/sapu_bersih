@@ -30,7 +30,6 @@ class _AbsenPage extends State<AbsenPage> {
   void initState() {
     super.initState();
     lokasiku_throughfare = "Mendapatkan Lokasi...";
-    getCam();
     getUserLocation();
     getPref();
   }
@@ -81,13 +80,16 @@ class _AbsenPage extends State<AbsenPage> {
       if (e.code == 'PERMISSION_DENIED') {
         error = 'please grant permission';
         print(error);
+        Navigator.of(context).pop();
       }
       if (e.code == 'PERMISSION_DENIED_NEVER_ASK') {
         error = 'permission denied- please enable it from app settings';
         print(error);
+        Navigator.of(context).pop();
       }
       myLocation = null;
     }
+    getCam();
     final coordinates =
         new Coordinates(myLocation.latitude, myLocation.longitude);
     var addresses =
@@ -105,7 +107,6 @@ class _AbsenPage extends State<AbsenPage> {
       mylat = myLocation.latitude;
       mylon = myLocation.longitude;
     });
-    return first;
   }
 
   Set<Marker> markers = Set();
@@ -169,13 +170,13 @@ class _AbsenPage extends State<AbsenPage> {
         return WillPopScope(
           onWillPop: () {},
           child: Dialog(
-            child: new Row(
+            child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
                     margin: EdgeInsets.all(10),
                     child: CircularProgressIndicator()),
-                new Text("Mengunggah Presensi Lembur..."),
+                Text("Mengunggah Presensi..."),
               ],
             ),
           ),

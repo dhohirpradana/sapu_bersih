@@ -6,6 +6,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:sapubersih/Pages/chat/chat_page.dart';
+import 'package:sapubersih/Pages/notifikasi/pengumuman_page.dart';
 import 'package:sapubersih/Pages/riwayat/riwayat_pekerjaan.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sapubersih/Pages/presensi/main_absen.dart';
@@ -42,27 +43,21 @@ class _HalamanUtamaState1 extends State<HalamanUtama> {
     super.initState();
     getPref();
     checkGps();
-
     OneSignal.shared
         .setNotificationReceivedHandler((OSNotification notification) {
       setState(() {
         title = notification.payload.title;
         content = notification.payload.body;
-
-        Fluttertoast.showToast(
-            msg: "Notifikasi Masuk",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIos: 1,
-            backgroundColor: Colors.lime.withOpacity(0.9),
-            textColor: Colors.white,
-            fontSize: 16.0);
       });
     });
 
     OneSignal.shared
         .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
-      print("di Tap");
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  PengumumanPage(title: title, body: content)));
     });
   }
 

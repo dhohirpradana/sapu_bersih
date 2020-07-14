@@ -153,8 +153,11 @@ class _ProfilePageState extends State<ProfilePage> {
       setState(() {
         resetSavePref(0);
       });
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => LoginPageKu()));
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => LoginPageKu()),
+        ModalRoute.withName("/LoginPage"),
+      );
     }
   }
 
