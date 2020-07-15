@@ -83,8 +83,15 @@ class _MainAbsenPageState1 extends State<MainPresensiPage1> {
               child: InkWell(
                 borderRadius: BorderRadius.circular(15),
                 onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => AbsenPage()));
+                  Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                      pageBuilder: (c, a1, a2) => AbsenPage(),
+                      transitionsBuilder: (c, anim, a2, child) =>
+                          FadeTransition(opacity: anim, child: child),
+                      transitionDuration: Duration(milliseconds: 100),
+                    ),
+                  );
                 },
                 splashColor: Colors.lightBlueAccent,
                 child: Container(
@@ -112,9 +119,14 @@ class _MainAbsenPageState1 extends State<MainPresensiPage1> {
                 borderRadius: BorderRadius.circular(15),
                 onTap: () {
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => AbsenPulangPage()));
+                    context,
+                    PageRouteBuilder(
+                      pageBuilder: (c, a1, a2) => AbsenPulangPage(),
+                      transitionsBuilder: (c, anim, a2, child) =>
+                          FadeTransition(opacity: anim, child: child),
+                      transitionDuration: Duration(milliseconds: 100),
+                    ),
+                  );
                 },
                 splashColor: Colors.lightBlueAccent,
                 child: Container(
@@ -142,9 +154,14 @@ class _MainAbsenPageState1 extends State<MainPresensiPage1> {
                 borderRadius: BorderRadius.circular(15),
                 onTap: () {
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => PerekamanLemburPage()));
+                    context,
+                    PageRouteBuilder(
+                      pageBuilder: (c, a1, a2) => PerekamanLemburPage(),
+                      transitionsBuilder: (c, anim, a2, child) =>
+                          FadeTransition(opacity: anim, child: child),
+                      transitionDuration: Duration(milliseconds: 100),
+                    ),
+                  );
                 },
                 splashColor: Colors.lightGreenAccent,
                 child: Container(
@@ -172,9 +189,14 @@ class _MainAbsenPageState1 extends State<MainPresensiPage1> {
                 borderRadius: BorderRadius.circular(15),
                 onTap: () {
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => AbsenLemburPulangPage()));
+                    context,
+                    PageRouteBuilder(
+                      pageBuilder: (c, a1, a2) => AbsenLemburPulangPage(),
+                      transitionsBuilder: (c, anim, a2, child) =>
+                          FadeTransition(opacity: anim, child: child),
+                      transitionDuration: Duration(milliseconds: 100),
+                    ),
+                  );
                 },
                 splashColor: Colors.lightGreenAccent,
                 child: Container(

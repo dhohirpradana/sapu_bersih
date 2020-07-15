@@ -54,10 +54,14 @@ class _HalamanUtamaState1 extends State<HalamanUtama> {
     OneSignal.shared
         .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
       Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  PengumumanPage(title: title, body: content)));
+        context,
+        PageRouteBuilder(
+          pageBuilder: (c, a1, a2) => PengumumanPage(),
+          transitionsBuilder: (c, anim, a2, child) =>
+              FadeTransition(opacity: anim, child: child),
+          transitionDuration: Duration(milliseconds: 100),
+        ),
+      );
     });
   }
 
@@ -210,10 +214,19 @@ class _HalamanUtamaState1 extends State<HalamanUtama> {
                                   GestureDetector(
                                     onTap: () {
                                       Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  MainPresensiPage1()));
+                                        context,
+                                        PageRouteBuilder(
+                                          pageBuilder: (c, a1, a2) =>
+                                              MainPresensiPage1(),
+                                          transitionsBuilder:
+                                              (c, anim, a2, child) =>
+                                                  FadeTransition(
+                                                      opacity: anim,
+                                                      child: child),
+                                          transitionDuration:
+                                              Duration(milliseconds: 100),
+                                        ),
+                                      );
                                     },
                                     child: Material(
                                       borderRadius: BorderRadius.circular(10),
@@ -250,10 +263,19 @@ class _HalamanUtamaState1 extends State<HalamanUtama> {
                                   GestureDetector(
                                     onTap: () {
                                       Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  RiwayatKerjaPage()));
+                                        context,
+                                        PageRouteBuilder(
+                                          pageBuilder: (c, a1, a2) =>
+                                              RiwayatKerjaPage(),
+                                          transitionsBuilder:
+                                              (c, anim, a2, child) =>
+                                                  FadeTransition(
+                                                      opacity: anim,
+                                                      child: child),
+                                          transitionDuration:
+                                              Duration(milliseconds: 100),
+                                        ),
+                                      );
                                     },
                                     child: Material(
                                       borderRadius: BorderRadius.circular(10),
@@ -322,10 +344,19 @@ class _HalamanUtamaState1 extends State<HalamanUtama> {
                                   GestureDetector(
                                     onTap: () {
                                       Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ChatPage()));
+                                        context,
+                                        PageRouteBuilder(
+                                          pageBuilder: (c, a1, a2) =>
+                                              ChatChild(),
+                                          transitionsBuilder:
+                                              (c, anim, a2, child) =>
+                                                  FadeTransition(
+                                                      opacity: anim,
+                                                      child: child),
+                                          transitionDuration:
+                                              Duration(milliseconds: 100),
+                                        ),
+                                      );
                                     },
                                     child: Material(
                                       borderRadius: BorderRadius.circular(10),
@@ -346,7 +377,7 @@ class _HalamanUtamaState1 extends State<HalamanUtama> {
                                                   6,
                                               color: Color(0xff037171),
                                             ),
-                                            Text("CHATTING",
+                                            Text("INFORMASI",
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.w500,
                                                     fontSize:
@@ -362,10 +393,19 @@ class _HalamanUtamaState1 extends State<HalamanUtama> {
                                   GestureDetector(
                                     onTap: () {
                                       Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ProfilePage()));
+                                        context,
+                                        PageRouteBuilder(
+                                          pageBuilder: (c, a1, a2) =>
+                                              ProfilePage(),
+                                          transitionsBuilder:
+                                              (c, anim, a2, child) =>
+                                                  FadeTransition(
+                                                      opacity: anim,
+                                                      child: child),
+                                          transitionDuration:
+                                              Duration(milliseconds: 100),
+                                        ),
+                                      );
                                     },
                                     child: Material(
                                       borderRadius: BorderRadius.circular(10),

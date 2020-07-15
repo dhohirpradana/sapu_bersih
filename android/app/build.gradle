@@ -47,7 +47,6 @@ def keystoreProperties = new Properties()
 
 android {
     compileSdkVersion 28
-
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
@@ -64,6 +63,7 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        ndk.abiFilters 'armeabi-v7a','arm64-v8a','x86','x86_64'
     }
 signingConfigs {
        release {

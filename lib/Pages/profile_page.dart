@@ -62,7 +62,6 @@ class _ProfilePageState extends State<ProfilePage> {
       'Content-Type': 'application-json'
     });
     if (response.statusCode == 200) {
-      // Future.delayed(Duration(milliseconds: 300), () async {
       final data = jsonDecode(response.body);
       setState(() {
         no_thl = data['no_thl'];
@@ -148,7 +147,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                                         ? "Desember"
                                                         : " ";
       });
-      // });
     } else {
       setState(() {
         resetSavePref(0);
