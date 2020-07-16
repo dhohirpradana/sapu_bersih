@@ -38,6 +38,7 @@ class _HalamanUtamaState1 extends State<HalamanUtama> {
   Timer timer;
   String title = "";
   String content = "";
+  String smallIcon;
   @override
   void initState() {
     super.initState();
@@ -48,20 +49,31 @@ class _HalamanUtamaState1 extends State<HalamanUtama> {
       setState(() {
         title = notification.payload.title;
         content = notification.payload.body;
+        smallIcon = notification.payload.smallIcon;
       });
     });
 
     OneSignal.shared
         .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
-      Navigator.push(
-        context,
-        PageRouteBuilder(
-          pageBuilder: (c, a1, a2) => PengumumanPage(),
-          transitionsBuilder: (c, anim, a2, child) =>
-              FadeTransition(opacity: anim, child: child),
-          transitionDuration: Duration(milliseconds: 100),
-        ),
-      );
+      (smallIcon == "chat")
+          ? Navigator.push(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (c, a1, a2) => ChatChild(),
+                transitionsBuilder: (c, anim, a2, child) =>
+                    FadeTransition(opacity: anim, child: child),
+                transitionDuration: Duration(milliseconds: 100),
+              ),
+            )
+          : Navigator.push(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (c, a1, a2) => PengumumanPage(),
+                transitionsBuilder: (c, anim, a2, child) =>
+                    FadeTransition(opacity: anim, child: child),
+                transitionDuration: Duration(milliseconds: 100),
+              ),
+            );
     });
   }
 
@@ -188,24 +200,73 @@ class _HalamanUtamaState1 extends State<HalamanUtama> {
                         Flexible(
                           flex: 1,
                           child: Container(
-                              margin: EdgeInsets.only(
-                                  top: MediaQuery.of(context).size.height / 15),
-                              width: MediaQuery.of(context).size.width / 6.3,
-                              child: Container(
-                                  child: Icon(Icons.people,
-                                      size:
-                                          MediaQuery.of(context).size.width / 7,
-                                      color: Color(0xff037171))
-                                  // Image(
-                                  //     image: AssetImage('lib/assets/bio.png')),
-
-                                  )),
+                            margin: EdgeInsets.only(
+                                top: MediaQuery.of(context).size.height / 47),
+                            width: MediaQuery.of(context).size.width / 1.1,
+                            height: MediaQuery.of(context).size.height / 6.5,
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  PageRouteBuilder(
+                                    pageBuilder: (c, a1, a2) =>
+                                        PengumumanPage(),
+                                    transitionsBuilder: (c, anim, a2, child) =>
+                                        FadeTransition(
+                                            opacity: anim, child: child),
+                                    transitionDuration:
+                                        Duration(milliseconds: 100),
+                                  ),
+                                );
+                              },
+                              child: Material(
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(90),
+                                    topRight: Radius.circular(30),
+                                    bottomLeft: Radius.circular(30),
+                                    bottomRight: Radius.circular(30)),
+                                elevation: 13,
+                                child: Container(
+                                  width:
+                                      MediaQuery.of(context).size.width / 3.5,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Icon(
+                                        Icons.info_outline,
+                                        size:
+                                            MediaQuery.of(context).size.width /
+                                                6,
+                                        color: Color(0xff037171),
+                                      ),
+                                      Column(
+                                        children: <Widget>[
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                          Text(
+                                            "PENGUMUMAN",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    25),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
                         Flexible(
                           flex: 1,
                           child: Container(
                             padding: EdgeInsets.only(
-                                top: MediaQuery.of(context).size.height / 9),
+                                top: MediaQuery.of(context).size.height / 11),
                             child: Center(
                               child: Row(
                                 mainAxisAlignment:
@@ -335,7 +396,7 @@ class _HalamanUtamaState1 extends State<HalamanUtama> {
                           flex: 1,
                           child: Container(
                             padding: EdgeInsets.only(
-                                top: MediaQuery.of(context).size.height / 7),
+                                top: MediaQuery.of(context).size.height / 11),
                             child: Center(
                               child: Row(
                                 mainAxisAlignment:
@@ -377,7 +438,7 @@ class _HalamanUtamaState1 extends State<HalamanUtama> {
                                                   6,
                                               color: Color(0xff037171),
                                             ),
-                                            Text("INFORMASI",
+                                            Text("PESAN",
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.w500,
                                                     fontSize:
@@ -449,71 +510,11 @@ class _HalamanUtamaState1 extends State<HalamanUtama> {
                     ),
                   ),
                 ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    GestureDetector(
-                      onTap: _showDialog,
-                      child: Container(
-                        child: Center(
-                          child: Container(
-                            margin: EdgeInsets.only(bottom: 10, right: 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: <Widget>[
-                                Text(
-                                  "Logout",
-                                  style: TextStyle(fontWeight: FontWeight.w600),
-                                ),
-                                Icon(
-                                  Icons.exit_to_app,
-                                  color: Color(0xff037171),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                )
               ],
             ),
           ],
         ),
       ),
-    );
-  }
-
-  _showDialog() {
-    // flutter defined function
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        // return object of type Dialog
-        return AlertDialog(
-          title: Text("KELUAR ?"),
-          // content: new Text("Alert Dialog body"),
-          actions: <Widget>[
-            // usually buttons at the bottom of the dialog
-            FlatButton(
-              child: Text("BATAL"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            FlatButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  signOut();
-                },
-                child: Text(
-                  "KELUAR",
-                  style: TextStyle(color: Colors.red),
-                ))
-          ],
-        );
-      },
     );
   }
 
@@ -527,6 +528,5 @@ class _HalamanUtamaState1 extends State<HalamanUtama> {
     }
     return Future.value(true);
   }
-
   DateTime currentBackPressTime;
 }

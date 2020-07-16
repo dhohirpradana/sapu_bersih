@@ -133,7 +133,7 @@ class _RiwayatKerjaPageState extends State<RiwayatKerjaPage> {
                           color: (status == 1)
                               ? Colors.greenAccent[100].withOpacity(0.3)
                               : (status == 2 || status == 3)
-                                  ? Color(0xfffdbc5e).withOpacity(0.3)
+                                  ? Color(0xfffff9e3)
                                   : Colors.white,
                           child: InkWell(
                             splashColor: Colors.blue[300],

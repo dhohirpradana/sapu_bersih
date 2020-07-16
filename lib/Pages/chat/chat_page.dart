@@ -1,8 +1,11 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:audioplayers/audio_cache.dart';
 import 'package:http/http.dart' as http;
 import 'package:chat_list/chat_list.dart';
 import 'package:flutter/material.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:sapubersih/Pages/notifikasi/pengumuman_page.dart';
 import 'package:sapubersih/api/api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,6 +16,51 @@ class ChatChild extends StatefulWidget {
 }
 
 class _ChatChildState extends State<ChatChild> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    getPref();
+    isLoading = 1;
+    OneSignal.shared
+        .setNotificationReceivedHandler((OSNotification notification) {
+      setState(() {
+        title = notification.payload.title;
+        content = notification.payload.body;
+        smallIcon = notification.payload.smallIcon;
+      });
+      if (smallIcon == "chat") {
+        OneSignal.shared.setInFocusDisplayType(OSNotificationDisplayType.none);
+        AudioCache player = AudioCache();
+        player.play('Chime.mp3');
+        _messageList.add(MessageWidget(
+          content: content.toString(),
+          ownerType: OwnerType.sender,
+          ownerName: "Admin",
+        ));
+      } else {
+        OneSignal.shared
+            .setInFocusDisplayType(OSNotificationDisplayType.notification);
+      }
+    });
+
+    OneSignal.shared
+        .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
+      (smallIcon == "chat")
+          ? () {}
+          : Navigator.push(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (c, a1, a2) => PengumumanPage(),
+                transitionsBuilder: (c, anim, a2, child) =>
+                    FadeTransition(opacity: anim, child: child),
+                transitionDuration: Duration(milliseconds: 100),
+              ),
+            );
+    });
+  }
+
   String token;
   getPref() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -23,7 +71,7 @@ class _ChatChildState extends State<ChatChild> {
   }
 
   Future<void> sendMessage() async {
-    if (msg == null) {
+    if (msg == null || msg == "" || msg.length < 1) {
     } else {
       showDialog(
         context: context,
@@ -45,6 +93,13 @@ class _ChatChildState extends State<ChatChild> {
       );
       if (response.statusCode == 200) {
         Navigator.pop(context);
+        Timer(
+          Duration(microseconds: 0),
+          () => _scrollController.animateTo(
+              _scrollController.position.maxScrollExtent,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeOut),
+        );
         _controller.clear();
         focusNode.unfocus();
         setState(() {
@@ -53,6 +108,7 @@ class _ChatChildState extends State<ChatChild> {
             ownerType: OwnerType.receiver,
             ownerName: "Saya",
           ));
+          msg = null;
         });
       } else {
         Navigator.pop(context);
@@ -100,6 +156,14 @@ class _ChatChildState extends State<ChatChild> {
     }
   }
 
+  void _toEnd() {
+    _scrollController.animateTo(
+      _scrollController.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.ease,
+    );
+  }
+
   String msg;
   var _controller = TextEditingController();
   final focusNode = FocusNode();
@@ -107,12 +171,9 @@ class _ChatChildState extends State<ChatChild> {
   final List<MessageWidget> _messageList = [];
 
   int isLoading;
-  @override
-  void initState() {
-    super.initState();
-    getPref();
-    isLoading = 1;
-  }
+  String title = "";
+  String content = "";
+  String smallIcon;
 
   @override
   void dispose() {
@@ -123,6 +184,13 @@ class _ChatChildState extends State<ChatChild> {
   int flex2 = 3;
   @override
   Widget build(BuildContext context) {
+    Timer(
+      Duration(microseconds: 0),
+      () => _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut),
+    );
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -131,7 +199,7 @@ class _ChatChildState extends State<ChatChild> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
-                "INFORMASI",
+                "PESAN",
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               Icon(Icons.message),
@@ -147,18 +215,30 @@ class _ChatChildState extends State<ChatChild> {
                   )
                 : Container(
                     margin: EdgeInsets.only(
-                        bottom: MediaQuery.of(context).size.height / 9,
-                        top: 19),
-                    child: ChatList(children: _messageList)),
+                        bottom: MediaQuery.of(context).size.height / 12.7,
+                        top: 21),
+                    child: Scrollbar(
+                        isAlwaysShown: false,
+                        controller: _scrollController,
+                        child: ChatList(
+                            scrollController: _scrollController,
+                            children: _messageList))),
             Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    color: Colors.white,
+                  ),
+                  height: MediaQuery.of(context).size.height / 13,
                   width: MediaQuery.of(context).size.width,
-                  margin: EdgeInsets.only(bottom: 2),
-                  color: Colors.white,
-                  padding: EdgeInsets.all(5),
+                  margin: EdgeInsets.only(bottom: 0),
+                  padding: EdgeInsets.only(left: 5, right: 5),
                   child: TextFormField(
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    textInputAction: TextInputAction.newline,
                     focusNode: focusNode,
                     controller: _controller,
                     onSaved: (e) => msg = e,
@@ -166,6 +246,12 @@ class _ChatChildState extends State<ChatChild> {
                       msg = e;
                     },
                     decoration: InputDecoration(
+                        contentPadding:
+                            EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                        enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                            borderSide: BorderSide(
+                                color: Color(0xff037171), width: 2.0)),
                         suffixIcon: IconButton(
                           highlightColor: Colors.blue.withOpacity(0.1),
                           icon: Icon(
@@ -212,7 +298,7 @@ class _ChatChildState extends State<ChatChild> {
                       borderRadius: BorderRadius.only(
                           bottomLeft: Radius.circular(20),
                           bottomRight: Radius.circular(20)),
-                      elevation: 2,
+                      elevation: 5,
                       child: Container(
                         width: MediaQuery.of(context).size.width,
                         padding: EdgeInsets.all(5),

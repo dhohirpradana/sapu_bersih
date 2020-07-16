@@ -1,7 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
+import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:sapubersih/Pages/home_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sapubersih/Pages/login_page.dart';
 import 'package:sapubersih/api/api.dart';
@@ -183,6 +186,56 @@ class _ProfilePageState extends State<ProfilePage> {
               ));
   }
 
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  Future<void> _cancelNotification() async {
+    await flutterLocalNotificationsPlugin.cancelAll();
+  }
+
+  _showDialog() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("KELUAR ?"),
+          actions: <Widget>[
+            FlatButton(
+              child: Text("BATAL"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  OneSignal.shared.removeExternalUserId();
+                  signOut();
+                  _cancelNotification();
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginPageKu()),
+                    ModalRoute.withName("/LoginPage"),
+                  );
+                },
+                child: Text(
+                  "KELUAR",
+                  style: TextStyle(color: Colors.red),
+                ))
+          ],
+        );
+      },
+    );
+  }
+
+  signOut() async {
+    SharedPreferences preference = await SharedPreferences.getInstance();
+    setState(() {
+      preference.setInt("value", null);
+    });
+  }
+
   Widget body() {
     return Material(
       child: Container(
@@ -361,6 +414,34 @@ class _ProfilePageState extends State<ProfilePage> {
                   bottom: BorderSide(color: Colors.lightBlue, width: 2.0),
                 ),
               ),
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                GestureDetector(
+                  onTap: _showDialog,
+                  child: Container(
+                    child: Center(
+                      child: Container(
+                        margin: EdgeInsets.only(top: 10, right: 0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            Text(
+                              "Logout",
+                              style: TextStyle(fontWeight: FontWeight.w600),
+                            ),
+                            Icon(
+                              Icons.exit_to_app,
+                              color: Color(0xff037171),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),

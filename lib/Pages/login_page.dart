@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sapubersih/Pages/home_page.dart';
 import 'package:sapubersih/api/api.dart';
@@ -102,6 +103,7 @@ class _LoginPageKuState extends State<LoginPageKu> {
         setState(() {
           savePref(value, id, token, name);
           _loginStatus = LoginStatus.signIn;
+          OneSignal.shared.setExternalUserId(id.toString());
         });
         Navigator.pop(context);
         validationText = "";

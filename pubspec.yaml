@@ -54,6 +54,7 @@ dependencies:
   flutter_slidable: ^0.5.4
   shimmer: ^1.1.1
   chat_list: ^1.0.1
+  flutter_local_notifications: ^1.4.4+2
 
 dev_dependencies:
   flutter_test:
@@ -94,6 +95,7 @@ flutter:
   - assets/berhasil-mengisi-presensi-lembur_pulang.mp3
   - assets/berhasil-mengisi-presensi-pulang.mp3
   - assets/bukan-masanya-mengisi-presensi_pulang.mp3
+  - assets/Chime.mp3
   #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
