@@ -39,6 +39,13 @@ class _ChatChildState extends State<ChatChild> {
           ownerType: OwnerType.sender,
           ownerName: "Admin",
         ));
+        Timer(
+          Duration(microseconds: 0),
+          () => _scrollController.animateTo(
+              _scrollController.position.maxScrollExtent,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeOut),
+        );
       } else {
         OneSignal.shared
             .setInFocusDisplayType(OSNotificationDisplayType.notification);
