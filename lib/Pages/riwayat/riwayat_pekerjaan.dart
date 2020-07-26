@@ -33,7 +33,6 @@ class _RiwayatKerjaPageState extends State<RiwayatKerjaPage> {
   getPref() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
-      id = preferences.getInt("id");
       token = preferences.getString("token");
     });
     getProfile();

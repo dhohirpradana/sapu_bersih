@@ -11,4 +11,5 @@ class BaseUrl {
   static String image = "$ip/storage/presensi";
   static String chat = "$ip/api/chat";
   static String announcement = "$ip/api/announcement";
+  static String jadwal = "$ip/api/jadwal";
 }

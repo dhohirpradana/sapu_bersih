@@ -185,112 +185,101 @@ class _AbsenPage extends State<AbsenPage> {
     );
     if (_imageList.length != 0) {
       _imageList.forEach((f) async {
-        // Find the mime type of the selected file by looking at the header bytes of the file
         final mimeTypeData =
             lookupMimeType(f.path, headerBytes: [0xFF, 0xD8]).split('/');
-        // Intilize the multipart request
         final imageUploadRequest =
             http.MultipartRequest('POST', Uri.parse(BaseUrl.reguler));
-        // Attach the file in the request
-        Timer(Duration(seconds: 1), () async {
-          final file = await http.MultipartFile.fromPath('image', f.path,
-              contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
-          imageUploadRequest.headers['authorization'] = 'Bearer $token';
-          imageUploadRequest.headers['content-type'] = 'multipart/form-data';
-          imageUploadRequest.fields['ext'] = mimeTypeData[1];
-          imageUploadRequest.fields['latitude'] = mylat.toString();
-          imageUploadRequest.fields['longtitude'] = mylon.toString();
-          imageUploadRequest.fields['lokasi'] = lokasiku_addressline.toString();
-          imageUploadRequest.files.add(file);
-          try {
-            final streamedResponse = await imageUploadRequest.send();
-            final response = await http.Response.fromStream(streamedResponse);
-            if (response.statusCode == 200) {
-              final data = json.decode(response.body);
-              int value = data['value'];
-              if (value == 2) {
-                setState(() {
-                  _imageList.clear();
-                });
+        final file = await http.MultipartFile.fromPath('image', f.path,
+            contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
+        imageUploadRequest.headers['authorization'] = 'Bearer $token';
+        imageUploadRequest.headers['content-type'] = 'multipart/form-data';
+        imageUploadRequest.fields['ext'] = mimeTypeData[1];
+        imageUploadRequest.fields['latitude'] = mylat.toString();
+        imageUploadRequest.fields['longtitude'] = mylon.toString();
+        imageUploadRequest.fields['lokasi'] = lokasiku_addressline.toString();
+        imageUploadRequest.files.add(file);
+        final streamedResponse = await imageUploadRequest.send();
+        final response = await http.Response.fromStream(streamedResponse);
+        if (response.statusCode == 200) {
+          final data = json.decode(response.body);
+          int value = data['value'];
+          if (value == 2) {
+            setState(() {
+              _imageList.clear();
+            });
 
-                AudioCache player = AudioCache();
-                player.play('anda-sudah-mengisi-presensi1593390220.mp3');
+            AudioCache player = AudioCache();
+            player.play('anda-sudah-mengisi-presensi1593390220.mp3');
 
-                Fluttertoast.showToast(
-                    msg: "ANDA SUDAH MENGISI PRESENSI",
-                    toastLength: Toast.LENGTH_LONG,
-                    gravity: ToastGravity.BOTTOM,
-                    timeInSecForIos: 1,
-                    backgroundColor: Colors.green.withOpacity(0.9),
-                    textColor: Colors.white,
-                    fontSize: 16.0);
-                Navigator.pop(context);
-                Navigator.pop(context);
-              } else if (value == 1) {
-                setState(() {
-                  _imageList.clear();
-                });
+            Fluttertoast.showToast(
+                msg: "ANDA SUDAH MENGISI PRESENSI",
+                toastLength: Toast.LENGTH_LONG,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIos: 1,
+                backgroundColor: Colors.green.withOpacity(0.9),
+                textColor: Colors.white,
+                fontSize: 16.0);
+            Navigator.pop(context);
+            Navigator.pop(context);
+          } else if (value == 1) {
+            setState(() {
+              _imageList.clear();
+            });
 
-                AudioCache player = AudioCache();
-                player.play('berhasil-mengisi-presensi1593390077.mp3');
+            AudioCache player = AudioCache();
+            player.play('berhasil-mengisi-presensi1593390077.mp3');
 
-                Fluttertoast.showToast(
-                    msg: "BERHASIL MENGISI PRESENSI",
-                    toastLength: Toast.LENGTH_LONG,
-                    gravity: ToastGravity.BOTTOM,
-                    timeInSecForIos: 1,
-                    backgroundColor: Colors.blue.withOpacity(0.9),
-                    textColor: Colors.white,
-                    fontSize: 16.0);
-                Navigator.pop(context);
-                Navigator.pop(context);
-              } else if (value == 0) {
-                AudioCache player = AudioCache();
-                player.play('bukan-masanya-mengisi-presensi1593389995.mp3');
+            Fluttertoast.showToast(
+                msg: "BERHASIL MENGISI PRESENSI",
+                toastLength: Toast.LENGTH_LONG,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIos: 1,
+                backgroundColor: Colors.blue.withOpacity(0.9),
+                textColor: Colors.white,
+                fontSize: 16.0);
+            Navigator.pop(context);
+            Navigator.pop(context);
+          } else if (value == 0) {
+            AudioCache player = AudioCache();
+            player.play('bukan-masanya-mengisi-presensi1593389995.mp3');
 
-                Fluttertoast.showToast(
-                    msg: "BUKAN MASANYA MENGISI PRESENSI",
-                    toastLength: Toast.LENGTH_LONG,
-                    gravity: ToastGravity.BOTTOM,
-                    timeInSecForIos: 1,
-                    backgroundColor: Colors.red.withOpacity(0.9),
-                    textColor: Colors.white,
-                    fontSize: 16.0);
-                Navigator.pop(context);
-              } else {
-                AudioCache player = AudioCache();
-                player.play('your-turn.mp3');
+            Fluttertoast.showToast(
+                msg: "BUKAN MASANYA MENGISI PRESENSI",
+                toastLength: Toast.LENGTH_LONG,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIos: 1,
+                backgroundColor: Colors.red.withOpacity(0.9),
+                textColor: Colors.white,
+                fontSize: 16.0);
+            Navigator.pop(context);
+          } else {
+            AudioCache player = AudioCache();
+            player.play('your-turn.mp3');
 
-                Fluttertoast.showToast(
-                    msg: "SISTEM SEDANG MAIN TENIS",
-                    toastLength: Toast.LENGTH_LONG,
-                    gravity: ToastGravity.TOP,
-                    timeInSecForIos: 1,
-                    backgroundColor: Colors.red.withOpacity(0.9),
-                    textColor: Colors.white,
-                    fontSize: 16.0);
-                Navigator.pop(context);
-              }
-              final Map<String, dynamic> responseData =
-                  json.decode(response.body);
-              _resetState();
-              return responseData;
-            } else {
-              setState(() {
-                resetSavePref(0);
-              });
-              signOut();
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => LoginPageKu()),
-                ModalRoute.withName("/LoginPage"),
-              );
-            }
-          } catch (e) {
-            print(e);
-            return null;
+            Fluttertoast.showToast(
+                msg: "SISTEM SEDANG MAIN TENIS",
+                toastLength: Toast.LENGTH_LONG,
+                gravity: ToastGravity.TOP,
+                timeInSecForIos: 1,
+                backgroundColor: Colors.red.withOpacity(0.9),
+                textColor: Colors.white,
+                fontSize: 16.0);
+            Navigator.pop(context);
           }
-        });
+          final Map<String, dynamic> responseData = json.decode(response.body);
+          _resetState();
+          return responseData;
+        } else {
+          // setState(() {
+          //   resetSavePref(0);
+          // });
+          // signOut();
+          // Navigator.pushAndRemoveUntil(
+          //   context,
+          //   MaterialPageRoute(builder: (context) => LoginPageKu()),
+          //   ModalRoute.withName("/LoginPage"),
+          // );
+        }
       });
     } else {
       AudioCache player = AudioCache();

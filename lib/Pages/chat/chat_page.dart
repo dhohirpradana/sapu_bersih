@@ -18,11 +18,11 @@ class ChatChild extends StatefulWidget {
 class _ChatChildState extends State<ChatChild> {
   final ScrollController _scrollController = ScrollController();
 
+  int isLoading = 1;
   @override
   void initState() {
     super.initState();
     getPref();
-    isLoading = 1;
     OneSignal.shared
         .setNotificationReceivedHandler((OSNotification notification) {
       setState(() {
@@ -30,7 +30,7 @@ class _ChatChildState extends State<ChatChild> {
         content = notification.payload.body;
         smallIcon = notification.payload.smallIcon;
       });
-      if (smallIcon == "chat") {
+      if (notification.payload.title == "pesan dari admin") {
         OneSignal.shared.setInFocusDisplayType(OSNotificationDisplayType.none);
         AudioCache player = AudioCache();
         player.play('Chime.mp3');
@@ -54,7 +54,7 @@ class _ChatChildState extends State<ChatChild> {
 
     OneSignal.shared
         .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
-      (smallIcon == "chat")
+      (title == "pesan dari admin")
           ? () {}
           : Navigator.push(
               context,
@@ -177,7 +177,6 @@ class _ChatChildState extends State<ChatChild> {
 
   final List<MessageWidget> _messageList = [];
 
-  int isLoading;
   String title = "";
   String content = "";
   String smallIcon;

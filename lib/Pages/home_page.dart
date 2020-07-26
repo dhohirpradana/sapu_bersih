@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:package_info/package_info.dart';
 import 'package:sapubersih/Pages/chat/chat_page.dart';
 import 'package:sapubersih/Pages/notifikasi/pengumuman_page.dart';
 import 'package:sapubersih/Pages/riwayat/riwayat_pekerjaan.dart';
@@ -39,6 +40,7 @@ class _HalamanUtamaState1 extends State<HalamanUtama> {
   String title = "";
   String content = "";
   String smallIcon;
+  String packageName, appName, version, buildNumber;
   @override
   void initState() {
     super.initState();
@@ -52,10 +54,9 @@ class _HalamanUtamaState1 extends State<HalamanUtama> {
         smallIcon = notification.payload.smallIcon;
       });
     });
-
     OneSignal.shared
         .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
-      (smallIcon == "chat")
+      (title == "pesan dari admin")
           ? Navigator.push(
               context,
               PageRouteBuilder(
@@ -74,6 +75,14 @@ class _HalamanUtamaState1 extends State<HalamanUtama> {
                 transitionDuration: Duration(milliseconds: 100),
               ),
             );
+    });
+    PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
+      setState(() {
+        appName = packageInfo.appName;
+        packageName = packageInfo.packageName;
+        version = packageInfo.version;
+        buildNumber = packageInfo.buildNumber;
+      });
     });
   }
 
@@ -512,6 +521,26 @@ class _HalamanUtamaState1 extends State<HalamanUtama> {
                 ),
               ],
             ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                      padding: EdgeInsets.all(9),
+                      child: Text(
+                        "V $version",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 12,
+                            color: Colors.grey),
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            )
           ],
         ),
       ),
@@ -528,5 +557,6 @@ class _HalamanUtamaState1 extends State<HalamanUtama> {
     }
     return Future.value(true);
   }
+
   DateTime currentBackPressTime;
 }

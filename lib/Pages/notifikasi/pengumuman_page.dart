@@ -31,7 +31,7 @@ class _PengumumanPageState extends State<PengumumanPage> {
         content = notification.payload.body;
         smallIcon = notification.payload.smallIcon;
       });
-      if (smallIcon == "chat") {
+      if (notification.payload.title == "pesan dari admin") {
         OneSignal.shared
             .setInFocusDisplayType(OSNotificationDisplayType.notification);
       } else {
@@ -41,17 +41,19 @@ class _PengumumanPageState extends State<PengumumanPage> {
     });
     OneSignal.shared
         .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
-      (smallIcon != "chat")
-          ? () {}
-          : Navigator.push(
-              context,
-              PageRouteBuilder(
-                pageBuilder: (c, a1, a2) => ChatChild(),
-                transitionsBuilder: (c, anim, a2, child) =>
-                    FadeTransition(opacity: anim, child: child),
-                transitionDuration: Duration(milliseconds: 100),
-              ),
-            );
+      if (title == "pesan dari admin") {
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (c, a1, a2) => ChatChild(),
+            transitionsBuilder: (c, anim, a2, child) =>
+                FadeTransition(opacity: anim, child: child),
+            transitionDuration: Duration(milliseconds: 100),
+          ),
+        );
+      } else {
+        () {};
+      }
     });
   }
 
@@ -160,7 +162,7 @@ class _PengumumanPageState extends State<PengumumanPage> {
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: <Widget>[
                                       Container(
-                                        margin: EdgeInsets.only(right: 3),
+                                        margin: EdgeInsets.only(right: 11),
                                         child: Text(
                                           "$tanggal $namab $tahun, $jam",
                                           textAlign: TextAlign.center,
@@ -177,11 +179,15 @@ class _PengumumanPageState extends State<PengumumanPage> {
                                 ),
                                 Card(
                                   margin: EdgeInsets.only(
-                                      top: 1, bottom: 10, right: 3, left: 3),
+                                      top: 1, bottom: 10, right: 5, left: 5),
                                   shadowColor: Colors.grey.withOpacity(0.5),
                                   elevation: 5,
                                   child: Container(
-                                    padding: EdgeInsets.all(15),
+                                    padding: EdgeInsets.only(
+                                        top: 10,
+                                        bottom: 25,
+                                        right: 10,
+                                        left: 10),
                                     child: Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.start,
