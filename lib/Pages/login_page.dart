@@ -200,7 +200,7 @@ class _LoginPageKuState extends State<LoginPageKu> {
     return RichText(
       textAlign: TextAlign.center,
       text: TextSpan(
-          text: 'S',
+          text: 'JE',
           style: GoogleFonts.portLligatSans(
             textStyle: Theme.of(context).textTheme.headline1,
             fontSize: 30,
@@ -209,7 +209,7 @@ class _LoginPageKuState extends State<LoginPageKu> {
           ),
           children: [
             TextSpan(
-              text: 'APU',
+              text: 'PARA',
               style: TextStyle(color: Color(0xff037171), fontSize: 30),
             ),
             TextSpan(

@@ -127,13 +127,22 @@ class _RiwayatKerjaPageState extends State<RiwayatKerjaPage> {
                                                                     : "Dessember";
                         final imageurl = BaseUrl.image;
                         final status = data["data"][index]["status"];
+                        final namaStatus = (status == 0)
+                            ? "Reguler Masuk"
+                            : (status == 1)
+                                ? "Reguler Pulang"
+                                : (status == 2)
+                                    ? "Lembur Masuk"
+                                    : "Lembur Pulang";
                         print(status);
                         return Card(
                           color: (status == 1)
-                              ? Colors.greenAccent[100].withOpacity(0.3)
-                              : (status == 2 || status == 3)
-                                  ? Color(0xfffff9e3)
-                                  : Colors.white,
+                              ? Colors.blue[50].withOpacity(0.3)
+                              : (status == 2)
+                                  ? Colors.orange[50]
+                                  : (status == 3)
+                                      ? Colors.red[50]
+                                      : Colors.green[50],
                           child: InkWell(
                             splashColor: Colors.blue[300],
                             onTap: () {
@@ -141,7 +150,6 @@ class _RiwayatKerjaPageState extends State<RiwayatKerjaPage> {
                                 barrierDismissible: true,
                                 context: context,
                                 builder: (BuildContext context) {
-                                  // return object of type Dialog
                                   return AlertDialog(
                                     title: Text(
                                       "DETAIL RIWAYAT PEKERJAAN",
@@ -158,123 +166,133 @@ class _RiwayatKerjaPageState extends State<RiwayatKerjaPage> {
                                               CrossAxisAlignment.end,
                                           children: <Widget>[
                                             Container(
-                                                margin: EdgeInsets.all(5),
-                                                child: (status == 1)
-                                                    ? Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .end,
-                                                        children: <Widget>[
-                                                          Text(
-                                                            "$tanggal $namab $tahun, $jam",
-                                                            style: TextStyle(
-                                                                fontSize: MediaQuery.of(
-                                                                            context)
-                                                                        .size
-                                                                        .width /
-                                                                    23,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                color: Colors
-                                                                    .deepPurple),
-                                                          ),
-                                                          Text(
-                                                            " Lembur",
-                                                            style: TextStyle(
-                                                                fontSize: MediaQuery.of(
-                                                                            context)
-                                                                        .size
-                                                                        .width /
-                                                                    23,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                color:
-                                                                    Colors.red),
-                                                          ),
-                                                        ],
-                                                      )
-                                                    : (status == 2)
-                                                        ? Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .end,
-                                                            children: <Widget>[
-                                                              Text(
-                                                                "$tanggal $namab $tahun, $jam",
-                                                                style: TextStyle(
-                                                                    fontSize: MediaQuery.of(context)
-                                                                            .size
-                                                                            .width /
-                                                                        23,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w400,
-                                                                    color: Colors
-                                                                        .deepPurple),
-                                                              ),
-                                                              Text(
-                                                                " Pulang",
-                                                                style: TextStyle(
-                                                                    fontSize: MediaQuery.of(context)
-                                                                            .size
-                                                                            .width /
-                                                                        23,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                    color: Colors
-                                                                        .red),
-                                                              ),
-                                                            ],
-                                                          )
-                                                        : (status == 3)
-                                                            ? Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .end,
-                                                                children: <
-                                                                    Widget>[
-                                                                  Text(
-                                                                    "$tanggal $namab $tahun, $jam",
-                                                                    style: TextStyle(
-                                                                        fontSize:
-                                                                            MediaQuery.of(context).size.width /
-                                                                                23,
-                                                                        fontWeight:
-                                                                            FontWeight
-                                                                                .w400,
-                                                                        color: Colors
-                                                                            .deepPurple),
-                                                                  ),
-                                                                  Text(
-                                                                    " Lembur Pulang",
-                                                                    style: TextStyle(
-                                                                        fontSize:
-                                                                            MediaQuery.of(context).size.width /
-                                                                                23,
-                                                                        fontWeight:
-                                                                            FontWeight
-                                                                                .bold,
-                                                                        color: Colors
-                                                                            .red),
-                                                                  ),
-                                                                ],
-                                                              )
-                                                            : Text(
-                                                                "$tanggal $namab $tahun, $jam",
-                                                                style: TextStyle(
-                                                                    fontSize: MediaQuery.of(context)
-                                                                            .size
-                                                                            .width /
-                                                                        23,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w400,
-                                                                    color: Colors
-                                                                        .deepPurple),
-                                                              )),
+                                              margin: EdgeInsets.all(5),
+                                              child: (status == 1)
+                                                  ? Row(
+                                                      children: <Widget>[
+                                                        Text(
+                                                          "$tanggal $namab $tahun, $jam",
+                                                          style: TextStyle(
+                                                              fontSize: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width /
+                                                                  23,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400,
+                                                              color: Colors
+                                                                  .deepPurple),
+                                                        ),
+                                                        Text(
+                                                          " Reguler Pulang",
+                                                          style: TextStyle(
+                                                              fontSize: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width /
+                                                                  23,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color:
+                                                                  Colors.blue),
+                                                        ),
+                                                      ],
+                                                    )
+                                                  : (status == 2)
+                                                      ? Row(
+                                                          children: <Widget>[
+                                                            Text(
+                                                              "$tanggal $namab $tahun, $jam",
+                                                              style: TextStyle(
+                                                                  fontSize: MediaQuery.of(
+                                                                              context)
+                                                                          .size
+                                                                          .width /
+                                                                      23,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400,
+                                                                  color: Colors
+                                                                      .deepPurple),
+                                                            ),
+                                                            Text(
+                                                              " Lembur Masuk",
+                                                              style: TextStyle(
+                                                                  fontSize: MediaQuery.of(
+                                                                              context)
+                                                                          .size
+                                                                          .width /
+                                                                      23,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  color: Colors
+                                                                      .orange),
+                                                            ),
+                                                          ],
+                                                        )
+                                                      : (status == 3)
+                                                          ? Row(
+                                                              children: <
+                                                                  Widget>[
+                                                                Text(
+                                                                  "$tanggal $namab $tahun, $jam",
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          MediaQuery.of(context).size.width /
+                                                                              23,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w400,
+                                                                      color: Colors
+                                                                          .deepPurple),
+                                                                ),
+                                                                Text(
+                                                                  " Lembur Pulang",
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          MediaQuery.of(context).size.width /
+                                                                              23,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      color: Colors
+                                                                          .red),
+                                                                ),
+                                                              ],
+                                                            )
+                                                          : Row(
+                                                              children: <
+                                                                  Widget>[
+                                                                Text(
+                                                                  "$tanggal $namab $tahun, $jam",
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          MediaQuery.of(context).size.width /
+                                                                              23,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w400,
+                                                                      color: Colors
+                                                                          .deepPurple),
+                                                                ),
+                                                                Text(
+                                                                  " Reguler Masuk",
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          MediaQuery.of(context).size.width /
+                                                                              23,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      color: Colors
+                                                                          .green),
+                                                                ),
+                                                              ],
+                                                            ),
+                                            ),
                                             Text(
                                               data["data"][index]["lokasi"],
                                               overflow: TextOverflow.ellipsis,
@@ -348,9 +366,9 @@ class _RiwayatKerjaPageState extends State<RiwayatKerjaPage> {
                               padding: EdgeInsets.only(
                                   left: 9,
                                   right: 9,
-                                  top: MediaQuery.of(context).size.width / 21,
+                                  top: MediaQuery.of(context).size.width / 15,
                                   bottom:
-                                      MediaQuery.of(context).size.width / 21),
+                                      MediaQuery.of(context).size.width / 15),
                               child: Row(
                                 children: <Widget>[
                                   Text((index + 1).toString(),
@@ -364,25 +382,26 @@ class _RiwayatKerjaPageState extends State<RiwayatKerjaPage> {
                                     child: Text("."),
                                   ),
                                   Text(
-                                    data["data"][index]["time"],
+                                      data["data"][index]["time"]
+                                          .toString()
+                                          .substring(0, 16),
+                                      style: TextStyle(
+                                          fontSize: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              23,
+                                          fontWeight: FontWeight.bold),
+                                      overflow: TextOverflow.ellipsis),
+                                  SizedBox(
+                                    width: 15,
+                                  ),
+                                  Text(
+                                    namaStatus,
                                     style: TextStyle(
                                         fontSize:
                                             MediaQuery.of(context).size.width /
                                                 23,
                                         fontWeight: FontWeight.bold),
-                                  ),
-                                  SizedBox(
-                                    width: 15,
-                                  ),
-                                  Expanded(
-                                    child: Text(data["data"][index]["lokasi"],
-                                        style: TextStyle(
-                                            fontSize: MediaQuery.of(context)
-                                                    .size
-                                                    .width /
-                                                23,
-                                            fontWeight: FontWeight.bold),
-                                        overflow: TextOverflow.ellipsis),
                                   ),
                                 ],
                               ),

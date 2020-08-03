@@ -98,7 +98,7 @@ class _BootScreenState extends State<BootScreen> {
                 height: 5,
               ),
               Text(
-                "SAPU BERSIH",
+                "JEPARA BERSIH",
                 style: TextStyle(
                     fontSize: MediaQuery.of(context).size.width / 22,
                     color: Color(0xff0e2f44).withOpacity(0.9),

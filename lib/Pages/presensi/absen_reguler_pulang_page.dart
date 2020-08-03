@@ -197,7 +197,21 @@ class _AbsenPulangPage extends State<AbsenPulangPage> {
         imageUploadRequest.fields['lokasi'] = lokasiku_addressline.toString();
         imageUploadRequest.files.add(file);
         final streamedResponse = await imageUploadRequest.send();
-        final response = await http.Response.fromStream(streamedResponse);
+        final response =
+            await http.Response.fromStream(streamedResponse).timeout(
+          Duration(seconds: 30),
+          onTimeout: () {
+            Fluttertoast.showToast(
+                msg: "Harap periksa koneksi jaringan Anda",
+                toastLength: Toast.LENGTH_LONG,
+                gravity: ToastGravity.BOTTOM,
+                backgroundColor: Colors.black.withOpacity(0.9),
+                textColor: Colors.white,
+                fontSize: 16.0);
+            Navigator.pop(context);
+            Navigator.pop(context);
+          },
+        );
         if (response.statusCode == 200) {
           final data = json.decode(response.body);
           int value = data['value'];
@@ -277,6 +291,17 @@ class _AbsenPulangPage extends State<AbsenPulangPage> {
           //   MaterialPageRoute(builder: (context) => LoginPageKu()),
           //   ModalRoute.withName("/LoginPage"),
           // );
+          AudioCache player = AudioCache();
+          player.play('your-turn.mp3');
+          Fluttertoast.showToast(
+              msg: "SISTEM SEDANG MAIN TENIS",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.TOP,
+              timeInSecForIos: 1,
+              backgroundColor: Colors.red.withOpacity(0.9),
+              textColor: Colors.white,
+              fontSize: 16.0);
+          Navigator.pop(context);
         }
       });
     } else {

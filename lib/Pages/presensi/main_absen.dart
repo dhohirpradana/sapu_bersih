@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:sapubersih/Pages/presensi/absen_lembur_page.dart';
 import 'package:sapubersih/Pages/presensi/absen_lembur_pulang_page.dart';
 import 'package:sapubersih/Pages/presensi/absen_reguler_page.dart';
@@ -121,6 +121,9 @@ class _MainAbsenPageState1 extends State<MainPresensiPage1> {
   }
 
   Widget body() {
+    // Tanggal Now
+    var now = DateTime.now();
+    String formattedDate = DateFormat('d').format(now);
     return Stack(
       children: <Widget>[
         Container(
@@ -305,19 +308,33 @@ class _MainAbsenPageState1 extends State<MainPresensiPage1> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           SizedBox(
-                            height: 5,
+                            height: 15,
                           ),
                           Container(
-                            child: Text(
-                              jadwal["data"]["nama_hari"]
-                                  .toString()
-                                  .toUpperCase(),
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 20),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text("       "),
+                                Text(
+                                  jadwal["data"]["nama_hari"]
+                                      .toString()
+                                      .toUpperCase(),
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20),
+                                ),
+                                Text(
+                                  formattedDate.toString().toUpperCase(),
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
+                                      color: Colors.grey),
+                                )
+                              ],
                             ),
                           ),
                           SizedBox(
-                            height: 10,
+                            height: 15,
                           ),
                           Table(
                             border: TableBorder.all(),
@@ -354,7 +371,7 @@ class _MainAbsenPageState1 extends State<MainPresensiPage1> {
                                                 style: TextStyle(
                                                     fontWeight:
                                                         FontWeight.bold)),
-                                            Text("MULAI",
+                                            Text("MASUK",
                                                 style: TextStyle(
                                                     fontWeight:
                                                         FontWeight.bold)),
@@ -446,7 +463,7 @@ class _MainAbsenPageState1 extends State<MainPresensiPage1> {
                                                 style: TextStyle(
                                                     fontWeight:
                                                         FontWeight.bold)),
-                                            Text("MULAI",
+                                            Text("MASUK",
                                                 style: TextStyle(
                                                     fontWeight:
                                                         FontWeight.bold)),

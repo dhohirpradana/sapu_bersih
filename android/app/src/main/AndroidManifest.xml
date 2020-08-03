@@ -1,4 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.sapubersih.jepara">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.jepara.bersih">
     <!-- io.flutter.app.FlutterApplication is an android.app.Application that
          calls FlutterMain.startInitialization(this); in its onCreate method.
          In most cases you can leave this as-is, but you if you want to provide
@@ -7,7 +7,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <application android:name="io.flutter.app.FlutterApplication" android:label="SapuBersih" android:icon="@mipmap/ic_launcher">
+    <application android:name="io.flutter.app.FlutterApplication" android:label="JeparaBersih" android:icon="@mipmap/ic_launcher">
         <!-- TODO: Add your API key here -->
         <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyBfpsJLMgWOtf_uV39SmHdRW28tXKTb8Hg" />
         <activity android:name=".MainActivity" android:launchMode="singleTop" android:theme="@style/LaunchTheme" android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode" android:hardwareAccelerated="true" android:windowSoftInputMode="adjustResize">

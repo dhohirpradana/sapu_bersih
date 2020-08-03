@@ -171,14 +171,14 @@ class _HalamanUtamaState1 extends State<HalamanUtama> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            "SAPU BERSIH",
+                            "JEPARA BERSIH",
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,
                                 fontSize:
                                     MediaQuery.of(context).size.width / 17),
                           ),
-                          Text("SISTEM ABSENSI PETUGAS KEBERSIHAN KAB. JEPARA",
+                          Text("SISTEM PRESENSI PETUGAS KEBERSIHAN KAB. JEPARA",
                               style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   color: Colors.white,

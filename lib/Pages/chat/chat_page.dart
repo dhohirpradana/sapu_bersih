@@ -112,8 +112,8 @@ class _ChatChildState extends State<ChatChild> {
         setState(() {
           _messageList.add(MessageWidget(
             content: msg.toString(),
-            ownerType: OwnerType.receiver,
-            ownerName: "Saya",
+            ownerType: OwnerType.sender,
+            ownerName: "S",
           ));
           msg = null;
         });
@@ -148,11 +148,10 @@ class _ChatChildState extends State<ChatChild> {
             _messageList.add(MessageWidget(
               content: extractedData["data"][i]["text"],
               ownerType: (extractedData["data"][i]["admin_id"] != null)
-                  ? OwnerType.sender
-                  : OwnerType.receiver,
-              ownerName: (extractedData["data"][i]["admin_id"] != null)
-                  ? "Admin"
-                  : "Saya",
+                  ? OwnerType.receiver
+                  : OwnerType.sender,
+              ownerName:
+                  (extractedData["data"][i]["admin_id"] != null) ? "S" : "A",
             ));
             setState(() {
               isLoading = 0;
@@ -230,16 +229,16 @@ class _ChatChildState extends State<ChatChild> {
                             scrollController: _scrollController,
                             children: _messageList))),
             Column(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
+                SizedBox(),
                 Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5),
                     color: Colors.white,
                   ),
-                  height: MediaQuery.of(context).size.height / 13,
                   width: MediaQuery.of(context).size.width,
-                  margin: EdgeInsets.only(bottom: 0),
+                  margin: EdgeInsets.only(bottom: 5),
                   padding: EdgeInsets.only(left: 5, right: 5),
                   child: TextFormField(
                     keyboardType: TextInputType.multiline,
