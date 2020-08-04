@@ -464,7 +464,7 @@ class _MainAbsenPageState1 extends State<MainPresensiPage1> {
                                                   MediaQuery.of(context)
                                                           .size
                                                           .height /
-                                                      25),
+                                                      35),
                                               child: Text(
                                                   jadwal["data"]["jam_selesai"]
                                                       .toString()
