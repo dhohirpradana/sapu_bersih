@@ -68,6 +68,9 @@ class _AbsenPulangPage extends State<AbsenPulangPage> {
 
   double mylat, mylon;
   getUserLocation() async {
+    setState(() {
+      isLoading = true;
+    });
     LocationData myLocation;
     String error;
     Location location = new Location();
@@ -245,6 +248,7 @@ class _AbsenPulangPage extends State<AbsenPulangPage> {
             Navigator.pop(context);
             Navigator.pop(context);
           } else if (value == 0) {
+            _imageList.clear();
             AudioCache player = AudioCache();
             player.play('bukan-masanya-mengisi-presensi_pulang.mp3');
 
@@ -574,6 +578,7 @@ class _AbsenPulangPage extends State<AbsenPulangPage> {
                         height: MediaQuery.of(context).size.width / 4,
                         child: Center(
                           child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
                               CircularProgressIndicator(),

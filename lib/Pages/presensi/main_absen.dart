@@ -324,13 +324,13 @@ class _MainAbsenPageState1 extends State<MainPresensiPage1> {
                                             .toUpperCase(),
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
-                                            fontSize: 20),
+                                            fontSize: 14),
                                       ),
                                       Text(
                                         formattedDate.toString().toUpperCase(),
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
-                                            fontSize: 20,
+                                            fontSize: 14,
                                             color: Colors.grey),
                                       )
                                     ],
@@ -351,7 +351,7 @@ class _MainAbsenPageState1 extends State<MainPresensiPage1> {
                                                   MediaQuery.of(context)
                                                           .size
                                                           .height /
-                                                      25),
+                                                      35),
                                               child: Text("BUKA",
                                                   style: TextStyle(
                                                       fontWeight:
@@ -365,7 +365,7 @@ class _MainAbsenPageState1 extends State<MainPresensiPage1> {
                                                   MediaQuery.of(context)
                                                           .size
                                                           .height /
-                                                      25),
+                                                      35),
                                               child: Text("TUTUP",
                                                   style: TextStyle(
                                                       fontWeight:
@@ -381,7 +381,7 @@ class _MainAbsenPageState1 extends State<MainPresensiPage1> {
                                                   MediaQuery.of(context)
                                                           .size
                                                           .height /
-                                                      25),
+                                                      35),
                                               child: Column(
                                                 children: <Widget>[
                                                   Text("REGULER",
@@ -403,7 +403,7 @@ class _MainAbsenPageState1 extends State<MainPresensiPage1> {
                                                   MediaQuery.of(context)
                                                           .size
                                                           .height /
-                                                      25),
+                                                      35),
                                               child: Text(
                                                   jadwal["data"]["jam_mulai"]
                                                       .toString()
@@ -411,7 +411,7 @@ class _MainAbsenPageState1 extends State<MainPresensiPage1> {
                                                   style: TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold,
-                                                      fontSize: 20)))
+                                                      fontSize: 14)))
                                         ],
                                       ),
                                       Column(
@@ -421,7 +421,7 @@ class _MainAbsenPageState1 extends State<MainPresensiPage1> {
                                                   MediaQuery.of(context)
                                                           .size
                                                           .height /
-                                                      25),
+                                                      35),
                                               child: Text(
                                                   jadwal["data"]
                                                           ["jam_mulai_sampai"]
@@ -430,7 +430,7 @@ class _MainAbsenPageState1 extends State<MainPresensiPage1> {
                                                   style: TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold,
-                                                      fontSize: 20)))
+                                                      fontSize: 14)))
                                         ],
                                       )
                                     ]),
@@ -442,7 +442,7 @@ class _MainAbsenPageState1 extends State<MainPresensiPage1> {
                                                   MediaQuery.of(context)
                                                           .size
                                                           .height /
-                                                      25),
+                                                      35),
                                               child: Column(
                                                 children: <Widget>[
                                                   Text("REGULER",
@@ -472,7 +472,7 @@ class _MainAbsenPageState1 extends State<MainPresensiPage1> {
                                                   style: TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold,
-                                                      fontSize: 20)))
+                                                      fontSize: 14)))
                                         ],
                                       ),
                                       Column(
@@ -482,7 +482,7 @@ class _MainAbsenPageState1 extends State<MainPresensiPage1> {
                                                   MediaQuery.of(context)
                                                           .size
                                                           .height /
-                                                      25),
+                                                      35),
                                               child: Text(
                                                   jadwal["data"]
                                                           ["jam_selesai_sampai"]
@@ -491,7 +491,7 @@ class _MainAbsenPageState1 extends State<MainPresensiPage1> {
                                                   style: TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold,
-                                                      fontSize: 20)))
+                                                      fontSize: 14)))
                                         ],
                                       )
                                     ]),
@@ -503,7 +503,7 @@ class _MainAbsenPageState1 extends State<MainPresensiPage1> {
                                                   MediaQuery.of(context)
                                                           .size
                                                           .height /
-                                                      25),
+                                                      35),
                                               child: Column(
                                                 children: <Widget>[
                                                   Text("LEMBUR",
@@ -525,7 +525,7 @@ class _MainAbsenPageState1 extends State<MainPresensiPage1> {
                                                   MediaQuery.of(context)
                                                           .size
                                                           .height /
-                                                      25),
+                                                      35),
                                               child: Text(
                                                   jadwal["data"]["lembur_mulai"]
                                                       .toString()
@@ -533,7 +533,7 @@ class _MainAbsenPageState1 extends State<MainPresensiPage1> {
                                                   style: TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold,
-                                                      fontSize: 20)))
+                                                      fontSize: 14)))
                                         ],
                                       ),
                                       Column(
@@ -543,7 +543,7 @@ class _MainAbsenPageState1 extends State<MainPresensiPage1> {
                                                   MediaQuery.of(context)
                                                           .size
                                                           .height /
-                                                      25),
+                                                      35),
                                               child: Text(
                                                   jadwal["data"][
                                                           "lembur_mulai_sampai"]
@@ -552,7 +552,7 @@ class _MainAbsenPageState1 extends State<MainPresensiPage1> {
                                                   style: TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold,
-                                                      fontSize: 20)))
+                                                      fontSize: 14)))
                                         ],
                                       )
                                     ]),
@@ -564,7 +564,7 @@ class _MainAbsenPageState1 extends State<MainPresensiPage1> {
                                                   MediaQuery.of(context)
                                                           .size
                                                           .height /
-                                                      25),
+                                                      35),
                                               child: Column(
                                                 children: <Widget>[
                                                   Text("LEMBUR",
@@ -586,7 +586,7 @@ class _MainAbsenPageState1 extends State<MainPresensiPage1> {
                                                   MediaQuery.of(context)
                                                           .size
                                                           .height /
-                                                      25),
+                                                      35),
                                               child: Text(
                                                   jadwal["data"]
                                                           ["lembur_selesai"]
@@ -595,7 +595,7 @@ class _MainAbsenPageState1 extends State<MainPresensiPage1> {
                                                   style: TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold,
-                                                      fontSize: 20)))
+                                                      fontSize: 14)))
                                         ],
                                       ),
                                       Column(
@@ -605,7 +605,7 @@ class _MainAbsenPageState1 extends State<MainPresensiPage1> {
                                                   MediaQuery.of(context)
                                                           .size
                                                           .height /
-                                                      25),
+                                                      35),
                                               child: Text(
                                                   jadwal["data"][
                                                           "lembur_selesai_sampai"]
@@ -614,7 +614,7 @@ class _MainAbsenPageState1 extends State<MainPresensiPage1> {
                                                   style: TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold,
-                                                      fontSize: 20)))
+                                                      fontSize: 14)))
                                         ],
                                       )
                                     ]),
@@ -624,7 +624,7 @@ class _MainAbsenPageState1 extends State<MainPresensiPage1> {
                             )
                           : Text("TUGAS TIDAK ADA",
                               style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 20)),
+                                  fontWeight: FontWeight.bold, fontSize: 14)),
                     ),
                   ),
                 ),

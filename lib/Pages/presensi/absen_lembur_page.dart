@@ -72,12 +72,14 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
 
   double mylat, mylon;
   getUserLocation() async {
+    setState(() {
+      isLoading = true;
+    });
     LocationData myLocation;
     String error;
     Location location = new Location();
     try {
       myLocation = await location.getLocation();
-      setState(() {});
     } on PlatformException catch (e) {
       if (e.code == 'PERMISSION_DENIED') {
         error = 'please grant permission';
@@ -578,6 +580,7 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
                         height: MediaQuery.of(context).size.width / 4,
                         child: Center(
                           child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
                               CircularProgressIndicator(),
