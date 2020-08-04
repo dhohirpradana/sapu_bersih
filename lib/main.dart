@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:location/location.dart' as loc;
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:sapubersih/Pages/boot/boot_screen.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -30,8 +31,22 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    checkCameraPermissions();
+    getLoc();
+    _checkForCameraPermission();
     getPref();
+  }
+
+  loc.Location location = loc.Location();
+  bool _serviceEnabled;
+
+  getLoc() async {
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        SystemNavigator.pop();
+      }
+    }
   }
 
   int id;
@@ -83,16 +98,17 @@ class _MyAppState extends State<MyApp> {
     } else {}
   }
 
-  static Future<bool> checkCameraPermissions() async {
-    PermissionStatus status = await Permission.camera.status;
-    if (status.isUndetermined || status.isDenied) {
-      print('cam is denied or undetermined'); //Prints
-      PermissionStatus newStatus = await Permission.camera.request();
-      print(await Permission.camera.isDenied); //Prints 'true' immediately
-      if (newStatus.isDenied) return false;
-      print('cam is approved!'); //Nope QQ
+  _checkForCameraPermission() async {
+    var cameraPermission = await Permission.camera.status;
+    print("camera permissions is $cameraPermission");
+    final permissionStatus = await Permission.camera.request();
+
+    if (permissionStatus == PermissionStatus.granted) {
+      // navigate to Xyz screen.
+
+    } else {
+      SystemNavigator.pop();
     }
-    return true;
   }
 
   @override
@@ -102,7 +118,7 @@ class _MyAppState extends State<MyApp> {
     ]);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter',
+      title: 'Jepara Bersih',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),

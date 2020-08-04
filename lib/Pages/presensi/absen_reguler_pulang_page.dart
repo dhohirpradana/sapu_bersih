@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui';
 import 'package:audioplayers/audio_cache.dart';
 import 'package:camera/camera.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -29,8 +30,7 @@ class _AbsenPulangPage extends State<AbsenPulangPage> {
   @override
   void initState() {
     super.initState();
-    lokasiku_throughfare = "Mendapatkan Lokasi...";
-    getUserLocation();
+    getCam();
     getPref();
   }
 //Proses//
@@ -41,10 +41,9 @@ class _AbsenPulangPage extends State<AbsenPulangPage> {
       if (cameras.length > 0) {
         setState(() {
           // 2
-          isLoading = 0;
           selectedCameraIdx = 1;
         });
-
+        getUserLocation();
         _initCameraController(cameras[selectedCameraIdx]).then((void v) {});
       } else {
         print("No camera available");
@@ -65,7 +64,7 @@ class _AbsenPulangPage extends State<AbsenPulangPage> {
       lokasiku_featurename,
       lokasiku_throughfare = "Mendapatkan Lokasi...",
       lokasiku_subthroughfare = "";
-  int isLoading = 1;
+  bool isLoading = true;
 
   double mylat, mylon;
   getUserLocation() async {
@@ -74,6 +73,7 @@ class _AbsenPulangPage extends State<AbsenPulangPage> {
     Location location = new Location();
     try {
       myLocation = await location.getLocation();
+      setState(() {});
     } on PlatformException catch (e) {
       if (e.code == 'PERMISSION_DENIED') {
         error = 'please grant permission';
@@ -87,7 +87,6 @@ class _AbsenPulangPage extends State<AbsenPulangPage> {
       }
       myLocation = null;
     }
-    getCam();
     final coordinates =
         new Coordinates(myLocation.latitude, myLocation.longitude);
     var addresses =
@@ -104,6 +103,7 @@ class _AbsenPulangPage extends State<AbsenPulangPage> {
       lokasiku_subthroughfare = '${first.subThoroughfare}';
       mylat = myLocation.latitude;
       mylon = myLocation.longitude;
+      isLoading = false;
     });
   }
 
@@ -126,7 +126,6 @@ class _AbsenPulangPage extends State<AbsenPulangPage> {
     });
   }
 
-  File imageFile;
   List<File> _imageList = [];
 
   //CameraOnApp
@@ -150,12 +149,6 @@ class _AbsenPulangPage extends State<AbsenPulangPage> {
     SharedPreferences preference = await SharedPreferences.getInstance();
     setState(() {
       preference.setInt("value", null);
-    });
-  }
-
-  void _resetState() {
-    setState(() {
-      imageFile = null;
     });
   }
 
@@ -279,7 +272,6 @@ class _AbsenPulangPage extends State<AbsenPulangPage> {
             Navigator.pop(context);
           }
           final Map<String, dynamic> responseData = json.decode(response.body);
-          _resetState();
           return responseData;
         } else {
           // setState(() {
@@ -453,7 +445,8 @@ class _AbsenPulangPage extends State<AbsenPulangPage> {
     }
 
     // 3
-    controller = CameraController(cameraDescription, ResolutionPreset.high);
+    controller = CameraController(cameraDescription, ResolutionPreset.medium,
+        enableAudio: false);
 
     // If the controller is updated then update the UI.
     // 4
@@ -505,36 +498,37 @@ class _AbsenPulangPage extends State<AbsenPulangPage> {
     final deviceRatio = size.width / size.height;
     return Scaffold(
       backgroundColor: Colors.white,
-      body: isLoading == 1
-          ? Container(
-              child: Center(
-                child: CircularProgressIndicator(),
-              ),
-            )
-          : Center(
-              child: Stack(
-                children: <Widget>[
-                  Transform.scale(
-                      scale: controller.value.aspectRatio / deviceRatio,
-                      child: _cameraPreviewWidget()),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      GestureDetector(
-                        onTap: () {
-                          onCapturePressed();
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              // return object of type Dialog
-                              return AlertDialog(
-                                title: Text("Kirim Presensi Pulang ?"),
+      body: Stack(
+        children: <Widget>[
+          Transform.scale(
+              scale: controller.value.aspectRatio / deviceRatio,
+              child: _cameraPreviewWidget()),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              IgnorePointer(
+                ignoring: (isLoading) ? true : false,
+                child: GestureDetector(
+                  onTap: () {
+                    onCapturePressed();
+                    showDialog(
+                      barrierDismissible: false,
+                      context: context,
+                      builder: (BuildContext context) {
+                        // return object of type Dialog
+                        return WillPopScope(
+                            onWillPop: () {},
+                            child: BackdropFilter(
+                              filter: ImageFilter.blur(sigmaX: 7, sigmaY: 7),
+                              child: AlertDialog(
+                                title: Text("Kirim Presensi Regular Pulang ?"),
                                 actions: <Widget>[
                                   // usually buttons at the bottom of the dialog
                                   FlatButton(
                                     child: Text("Ulangi"),
                                     onPressed: () {
                                       Navigator.of(context).pop();
+                                      _imageList.clear();
                                     },
                                   ),
                                   FlatButton(
@@ -544,38 +538,59 @@ class _AbsenPulangPage extends State<AbsenPulangPage> {
                                     },
                                   ),
                                 ],
-                              );
-                            },
-                          );
-                        },
-                        child: Container(
-                          height: MediaQuery.of(context).size.height / 17,
-                          width: (MediaQuery.of(context).size.width),
-                          color: Color(0xff037171),
-                          child: Center(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Text(
-                                  "KIRIM",
-                                  style: TextStyle(
-                                      fontSize:
-                                          MediaQuery.of(context).size.width /
-                                              21,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w600),
-                                ),
-                              ],
-                            ),
+                              ),
+                            ));
+                      },
+                    );
+                  },
+                  child: Container(
+                    height: MediaQuery.of(context).size.height / 17,
+                    width: (MediaQuery.of(context).size.width),
+                    color: Color(0xff037171),
+                    child: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            "KIRIM",
+                            style: TextStyle(
+                                fontSize:
+                                    MediaQuery.of(context).size.width / 21,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              isLoading
+                  ? Container(
+                      padding: EdgeInsets.all(10),
+                      color: Colors.white,
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.width / 4,
+                        child: Center(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              CircularProgressIndicator(),
+                              Text(
+                                "Mendapatkan lokasi...",
+                                style: TextStyle(color: Colors.black),
+                              )
+                            ],
                           ),
                         ),
                       ),
-                      gmaps()
-                    ],
-                  )
-                ],
-              ),
-            ),
+                    )
+                  : gmaps()
+            ],
+          )
+        ],
+      ),
     );
   }
 }

@@ -183,6 +183,9 @@ class _ChatChildState extends State<ChatChild> {
   @override
   void dispose() {
     super.dispose();
+    _controller.dispose();
+    focusNode.dispose();
+    _scrollController.dispose();
   }
 
   int flex1 = 1;
@@ -225,9 +228,11 @@ class _ChatChildState extends State<ChatChild> {
                     child: Scrollbar(
                         isAlwaysShown: false,
                         controller: _scrollController,
-                        child: ChatList(
-                            scrollController: _scrollController,
-                            children: _messageList))),
+                        child: RepaintBoundary(
+                          child: ChatList(
+                              scrollController: _scrollController,
+                              children: _messageList),
+                        ))),
             Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[

@@ -30,7 +30,7 @@ class _ProfilePageState extends State<ProfilePage> {
       tanggal_lahir,
       tingkat_pendidikan_terakhir,
       jurusan_pendidikan_terakhir,
-      jabatan,
+      jabatanData,
       status_tenaga,
       unit_kerja,
       tahun,
@@ -40,7 +40,8 @@ class _ProfilePageState extends State<ProfilePage> {
       tahun1,
       bulan1,
       tanggal1,
-      namab1;
+      namab1,
+      jabatan;
 
   getPref() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -74,11 +75,16 @@ class _ProfilePageState extends State<ProfilePage> {
         tanggal_lahir = data['tanggal_lahir'];
         tingkat_pendidikan_terakhir = data['tingkat_pendidikan_terakhir'];
         jurusan_pendidikan_terakhir = data['jurusan_pendidikan_terakhir'];
-        jabatan = data['jabatan'];
+        jabatanData = data['jabatan'];
         status_tenaga = data['status_tenaga'];
         unit_kerja = data['unit_kerja'];
         isLoading = 0;
 
+        if (jabatanData != null) {
+          jabatan = jabatanData;
+        } else {
+          jabatan = "TUGAS TIDAK ADA";
+        }
         if (tanggal_lahir != null) {
           tahun = tanggal_lahir.substring(0, 4);
           bulan = tanggal_lahir.substring(5, 7);

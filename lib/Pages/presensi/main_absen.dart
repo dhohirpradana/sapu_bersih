@@ -45,6 +45,7 @@ class _MainAbsenPageState1 extends State<MainPresensiPage1> {
     print(response.statusCode);
     if (response.statusCode != 200) {
       Navigator.pop(context);
+      jadwal = null;
     } else {
       setState(() {
         jadwal = json.decode(response.body);
@@ -304,252 +305,326 @@ class _MainAbsenPageState1 extends State<MainPresensiPage1> {
                       padding: EdgeInsets.all(5),
                       width: MediaQuery.of(context).size.width / 1.2,
                       height: MediaQuery.of(context).size.height / 1.5,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          SizedBox(
-                            height: 15,
-                          ),
-                          Container(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      child: (jadwal != null)
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
-                                Text("       "),
-                                Text(
-                                  jadwal["data"]["nama_hari"]
-                                      .toString()
-                                      .toUpperCase(),
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20),
+                                SizedBox(
+                                  height: 15,
                                 ),
-                                Text(
-                                  formattedDate.toString().toUpperCase(),
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20,
-                                      color: Colors.grey),
-                                )
+                                Container(
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text("       "),
+                                      Text(
+                                        jadwal["data"]["nama_hari"]
+                                            .toString()
+                                            .toUpperCase(),
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20),
+                                      ),
+                                      Text(
+                                        formattedDate.toString().toUpperCase(),
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20,
+                                            color: Colors.grey),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                Table(
+                                  border: TableBorder.all(),
+                                  children: [
+                                    TableRow(children: [
+                                      Column(),
+                                      Column(
+                                        children: <Widget>[
+                                          Container(
+                                              padding: EdgeInsets.all(
+                                                  MediaQuery.of(context)
+                                                          .size
+                                                          .height /
+                                                      25),
+                                              child: Text("BUKA",
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold)))
+                                        ],
+                                      ),
+                                      Column(
+                                        children: <Widget>[
+                                          Container(
+                                              padding: EdgeInsets.all(
+                                                  MediaQuery.of(context)
+                                                          .size
+                                                          .height /
+                                                      25),
+                                              child: Text("TUTUP",
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold)))
+                                        ],
+                                      )
+                                    ]),
+                                    TableRow(children: [
+                                      Column(
+                                        children: <Widget>[
+                                          Container(
+                                              padding: EdgeInsets.all(
+                                                  MediaQuery.of(context)
+                                                          .size
+                                                          .height /
+                                                      25),
+                                              child: Column(
+                                                children: <Widget>[
+                                                  Text("REGULER",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold)),
+                                                  Text("MASUK",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold)),
+                                                ],
+                                              ))
+                                        ],
+                                      ),
+                                      Column(
+                                        children: <Widget>[
+                                          Container(
+                                              padding: EdgeInsets.all(
+                                                  MediaQuery.of(context)
+                                                          .size
+                                                          .height /
+                                                      25),
+                                              child: Text(
+                                                  jadwal["data"]["jam_mulai"]
+                                                      .toString()
+                                                      .substring(0, 5),
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 20)))
+                                        ],
+                                      ),
+                                      Column(
+                                        children: <Widget>[
+                                          Container(
+                                              padding: EdgeInsets.all(
+                                                  MediaQuery.of(context)
+                                                          .size
+                                                          .height /
+                                                      25),
+                                              child: Text(
+                                                  jadwal["data"]
+                                                          ["jam_mulai_sampai"]
+                                                      .toString()
+                                                      .substring(0, 5),
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 20)))
+                                        ],
+                                      )
+                                    ]),
+                                    TableRow(children: [
+                                      Column(
+                                        children: <Widget>[
+                                          Container(
+                                              padding: EdgeInsets.all(
+                                                  MediaQuery.of(context)
+                                                          .size
+                                                          .height /
+                                                      25),
+                                              child: Column(
+                                                children: <Widget>[
+                                                  Text("REGULER",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold)),
+                                                  Text("PULANG",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold))
+                                                ],
+                                              ))
+                                        ],
+                                      ),
+                                      Column(
+                                        children: <Widget>[
+                                          Container(
+                                              padding: EdgeInsets.all(
+                                                  MediaQuery.of(context)
+                                                          .size
+                                                          .height /
+                                                      25),
+                                              child: Text(
+                                                  jadwal["data"]["jam_selesai"]
+                                                      .toString()
+                                                      .substring(0, 5),
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 20)))
+                                        ],
+                                      ),
+                                      Column(
+                                        children: <Widget>[
+                                          Container(
+                                              padding: EdgeInsets.all(
+                                                  MediaQuery.of(context)
+                                                          .size
+                                                          .height /
+                                                      25),
+                                              child: Text(
+                                                  jadwal["data"]
+                                                          ["jam_selesai_sampai"]
+                                                      .toString()
+                                                      .substring(0, 5),
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 20)))
+                                        ],
+                                      )
+                                    ]),
+                                    TableRow(children: [
+                                      Column(
+                                        children: <Widget>[
+                                          Container(
+                                              padding: EdgeInsets.all(
+                                                  MediaQuery.of(context)
+                                                          .size
+                                                          .height /
+                                                      25),
+                                              child: Column(
+                                                children: <Widget>[
+                                                  Text("LEMBUR",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold)),
+                                                  Text("MASUK",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold)),
+                                                ],
+                                              ))
+                                        ],
+                                      ),
+                                      Column(
+                                        children: <Widget>[
+                                          Container(
+                                              padding: EdgeInsets.all(
+                                                  MediaQuery.of(context)
+                                                          .size
+                                                          .height /
+                                                      25),
+                                              child: Text(
+                                                  jadwal["data"]["lembur_mulai"]
+                                                      .toString()
+                                                      .substring(0, 5),
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 20)))
+                                        ],
+                                      ),
+                                      Column(
+                                        children: <Widget>[
+                                          Container(
+                                              padding: EdgeInsets.all(
+                                                  MediaQuery.of(context)
+                                                          .size
+                                                          .height /
+                                                      25),
+                                              child: Text(
+                                                  jadwal["data"][
+                                                          "lembur_mulai_sampai"]
+                                                      .toString()
+                                                      .substring(0, 5),
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 20)))
+                                        ],
+                                      )
+                                    ]),
+                                    TableRow(children: [
+                                      Column(
+                                        children: <Widget>[
+                                          Container(
+                                              padding: EdgeInsets.all(
+                                                  MediaQuery.of(context)
+                                                          .size
+                                                          .height /
+                                                      25),
+                                              child: Column(
+                                                children: <Widget>[
+                                                  Text("LEMBUR",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold)),
+                                                  Text("PULANG",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold))
+                                                ],
+                                              ))
+                                        ],
+                                      ),
+                                      Column(
+                                        children: <Widget>[
+                                          Container(
+                                              padding: EdgeInsets.all(
+                                                  MediaQuery.of(context)
+                                                          .size
+                                                          .height /
+                                                      25),
+                                              child: Text(
+                                                  jadwal["data"]
+                                                          ["lembur_selesai"]
+                                                      .toString()
+                                                      .substring(0, 5),
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 20)))
+                                        ],
+                                      ),
+                                      Column(
+                                        children: <Widget>[
+                                          Container(
+                                              padding: EdgeInsets.all(
+                                                  MediaQuery.of(context)
+                                                          .size
+                                                          .height /
+                                                      25),
+                                              child: Text(
+                                                  jadwal["data"][
+                                                          "lembur_selesai_sampai"]
+                                                      .toString()
+                                                      .substring(0, 5),
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 20)))
+                                        ],
+                                      )
+                                    ]),
+                                  ],
+                                ),
                               ],
-                            ),
-                          ),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          Table(
-                            border: TableBorder.all(),
-                            children: [
-                              TableRow(children: [
-                                Column(),
-                                Column(
-                                  children: <Widget>[
-                                    Container(
-                                        padding: EdgeInsets.all(20),
-                                        child: Text("BUKA",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold)))
-                                  ],
-                                ),
-                                Column(
-                                  children: <Widget>[
-                                    Container(
-                                        padding: EdgeInsets.all(20),
-                                        child: Text("TUTUP",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold)))
-                                  ],
-                                )
-                              ]),
-                              TableRow(children: [
-                                Column(
-                                  children: <Widget>[
-                                    Container(
-                                        padding: EdgeInsets.all(20),
-                                        child: Column(
-                                          children: <Widget>[
-                                            Text("REGULER",
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold)),
-                                            Text("MASUK",
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold)),
-                                          ],
-                                        ))
-                                  ],
-                                ),
-                                Column(
-                                  children: <Widget>[
-                                    Container(
-                                        padding: EdgeInsets.all(25),
-                                        child: Text(
-                                            jadwal["data"]["jam_mulai"]
-                                                .toString()
-                                                .substring(0, 5),
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 20)))
-                                  ],
-                                ),
-                                Column(
-                                  children: <Widget>[
-                                    Container(
-                                        padding: EdgeInsets.all(25),
-                                        child: Text(
-                                            jadwal["data"]["jam_mulai_sampai"]
-                                                .toString()
-                                                .substring(0, 5),
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 20)))
-                                  ],
-                                )
-                              ]),
-                              TableRow(children: [
-                                Column(
-                                  children: <Widget>[
-                                    Container(
-                                        padding: EdgeInsets.all(20),
-                                        child: Column(
-                                          children: <Widget>[
-                                            Text("REGULER",
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold)),
-                                            Text("PULANG",
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold))
-                                          ],
-                                        ))
-                                  ],
-                                ),
-                                Column(
-                                  children: <Widget>[
-                                    Container(
-                                        padding: EdgeInsets.all(25),
-                                        child: Text(
-                                            jadwal["data"]["jam_selesai"]
-                                                .toString()
-                                                .substring(0, 5),
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 20)))
-                                  ],
-                                ),
-                                Column(
-                                  children: <Widget>[
-                                    Container(
-                                        padding: EdgeInsets.all(25),
-                                        child: Text(
-                                            jadwal["data"]["jam_selesai_sampai"]
-                                                .toString()
-                                                .substring(0, 5),
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 20)))
-                                  ],
-                                )
-                              ]),
-                              TableRow(children: [
-                                Column(
-                                  children: <Widget>[
-                                    Container(
-                                        padding: EdgeInsets.all(20),
-                                        child: Column(
-                                          children: <Widget>[
-                                            Text("LEMBUR",
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold)),
-                                            Text("MASUK",
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold)),
-                                          ],
-                                        ))
-                                  ],
-                                ),
-                                Column(
-                                  children: <Widget>[
-                                    Container(
-                                        padding: EdgeInsets.all(25),
-                                        child: Text(
-                                            jadwal["data"]["lembur_mulai"]
-                                                .toString()
-                                                .substring(0, 5),
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 20)))
-                                  ],
-                                ),
-                                Column(
-                                  children: <Widget>[
-                                    Container(
-                                        padding: EdgeInsets.all(25),
-                                        child: Text(
-                                            jadwal["data"]
-                                                    ["lembur_mulai_sampai"]
-                                                .toString()
-                                                .substring(0, 5),
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 20)))
-                                  ],
-                                )
-                              ]),
-                              TableRow(children: [
-                                Column(
-                                  children: <Widget>[
-                                    Container(
-                                        padding: EdgeInsets.all(20),
-                                        child: Column(
-                                          children: <Widget>[
-                                            Text("LEMBUR",
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold)),
-                                            Text("PULANG",
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold))
-                                          ],
-                                        ))
-                                  ],
-                                ),
-                                Column(
-                                  children: <Widget>[
-                                    Container(
-                                        padding: EdgeInsets.all(25),
-                                        child: Text(
-                                            jadwal["data"]["lembur_selesai"]
-                                                .toString()
-                                                .substring(0, 5),
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 20)))
-                                  ],
-                                ),
-                                Column(
-                                  children: <Widget>[
-                                    Container(
-                                        padding: EdgeInsets.all(25),
-                                        child: Text(
-                                            jadwal["data"]
-                                                    ["lembur_selesai_sampai"]
-                                                .toString()
-                                                .substring(0, 5),
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 20)))
-                                  ],
-                                )
-                              ]),
-                            ],
-                          ),
-                        ],
-                      ),
+                            )
+                          : Text("TUGAS TIDAK ADA",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 20)),
                     ),
                   ),
                 ),

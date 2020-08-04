@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui';
 import 'package:audioplayers/audio_cache.dart';
 import 'package:camera/camera.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -18,8 +19,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sapubersih/api/api.dart';
 
-import '../login_page.dart';
-
 class PerekamanLemburPage extends StatefulWidget {
   @override
   _PerekamanPageState createState() => _PerekamanPageState();
@@ -29,24 +28,26 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
   @override
   void initState() {
     super.initState();
-    lokasiku_throughfare = "Mendapatkan Lokasi...";
-    getUserLocation();
+    getCam();
     getPref();
   }
-//Proses//
 
+  @override
+  void dispose() {
+    controller?.dispose();
+    super.dispose();
+  }
+
+//Proses//
   getCam() {
     availableCameras().then((availableCameras) {
       cameras = availableCameras;
       if (cameras.length > 0) {
         setState(() {
           // 2
-          Future.delayed(Duration(milliseconds: 200), () {
-            isLoading = 0;
-          });
           selectedCameraIdx = 1;
         });
-
+        getUserLocation();
         _initCameraController(cameras[selectedCameraIdx]).then((void v) {});
       } else {
         print("No camera available");
@@ -67,7 +68,7 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
       lokasiku_featurename,
       lokasiku_throughfare = "Mendapatkan Lokasi...",
       lokasiku_subthroughfare = "";
-  int isLoading = 1;
+  bool isLoading = true;
 
   double mylat, mylon;
   getUserLocation() async {
@@ -76,6 +77,7 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
     Location location = new Location();
     try {
       myLocation = await location.getLocation();
+      setState(() {});
     } on PlatformException catch (e) {
       if (e.code == 'PERMISSION_DENIED') {
         error = 'please grant permission';
@@ -89,7 +91,6 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
       }
       myLocation = null;
     }
-    getCam();
     final coordinates =
         new Coordinates(myLocation.latitude, myLocation.longitude);
     var addresses =
@@ -106,6 +107,7 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
       lokasiku_subthroughfare = '${first.subThoroughfare}';
       mylat = myLocation.latitude;
       mylon = myLocation.longitude;
+      isLoading = false;
     });
   }
 
@@ -128,7 +130,6 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
     });
   }
 
-  File imageFile;
   List<File> _imageList = [];
 
   //CameraOnApp
@@ -138,7 +139,7 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
       // 1
       final path = pathF.join(
         (await getTemporaryDirectory()).path,
-        '${DateTime.now()}.png',
+        '${DateTime.now()}.jpg',
       );
       _imageList.add(File(path));
       // 2
@@ -152,12 +153,6 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
     SharedPreferences preference = await SharedPreferences.getInstance();
     setState(() {
       preference.setInt("value", null);
-    });
-  }
-
-  void _resetState() {
-    setState(() {
-      imageFile = null;
     });
   }
 
@@ -176,7 +171,7 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
                 Container(
                     margin: EdgeInsets.all(10),
                     child: CircularProgressIndicator()),
-                Text("Mengunggah Presensi..."),
+                Text("Lembur upload..."),
               ],
             ),
           ),
@@ -254,9 +249,9 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
             Navigator.pop(context);
             Navigator.pop(context);
           } else if (value == 0) {
+            _imageList.clear();
             AudioCache player = AudioCache();
             player.play('bukan-masanya-mengisi-presensi1593390112.mp3');
-
             Fluttertoast.showToast(
                 msg: "BUKAN MASANYA MENGISI PRESENSI LEMBUR",
                 toastLength: Toast.LENGTH_LONG,
@@ -281,7 +276,6 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
             Navigator.pop(context);
           }
           final Map<String, dynamic> responseData = json.decode(response.body);
-          _resetState();
           return responseData;
         } else {
           // setState(() {
@@ -447,7 +441,6 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
   CameraController controller;
   List cameras;
   int selectedCameraIdx;
-  String imagePath;
 
   Future _initCameraController(CameraDescription cameraDescription) async {
     if (controller != null) {
@@ -455,7 +448,8 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
     }
 
     // 3
-    controller = CameraController(cameraDescription, ResolutionPreset.high);
+    controller = CameraController(cameraDescription, ResolutionPreset.medium,
+        enableAudio: false);
 
     // If the controller is updated then update the UI.
     // 4
@@ -507,77 +501,100 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
     final deviceRatio = size.width / size.height;
     return Scaffold(
       backgroundColor: Colors.white,
-      body: isLoading == 1
-          ? Container(
-              child: Center(
-                child: CircularProgressIndicator(),
-              ),
-            )
-          : Center(
-              child: Stack(
-                children: <Widget>[
-                  Transform.scale(
-                      scale: controller.value.aspectRatio / deviceRatio,
-                      child: _cameraPreviewWidget()),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      GestureDetector(
-                        onTap: () {
-                          onCapturePressed();
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              // return object of type Dialog
-                              return AlertDialog(
-                                title: Text("Kirim Presensi Lembur ?"),
-                                actions: <Widget>[
-                                  // usually buttons at the bottom of the dialog
-                                  FlatButton(
-                                    child: Text("Ulangi"),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                  FlatButton(
-                                    child: Text("Kirim"),
-                                    onPressed: () {
-                                      _uploadImage();
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                        child: Container(
-                          height: MediaQuery.of(context).size.height / 17,
-                          width: (MediaQuery.of(context).size.width),
-                          color: Color(0xff037171),
-                          child: Center(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Text(
-                                  "KIRIM",
-                                  style: TextStyle(
-                                      fontSize:
-                                          MediaQuery.of(context).size.width /
-                                              21,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w600),
+      body: Stack(
+        children: <Widget>[
+          Transform.scale(
+              scale: controller.value.aspectRatio / deviceRatio,
+              child: _cameraPreviewWidget()),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              IgnorePointer(
+                ignoring: isLoading ? true : false,
+                child: GestureDetector(
+                  onTap: () {
+                    onCapturePressed();
+                    showDialog(
+                      barrierDismissible: false,
+                      context: context,
+                      builder: (BuildContext context) {
+                        // return object of type Dialog
+                        return WillPopScope(
+                          onWillPop: () {},
+                          child: BackdropFilter(
+                            filter: ImageFilter.blur(sigmaX: 7, sigmaY: 7),
+                            child: AlertDialog(
+                              title: Text("Kirim Presensi Lembur ?"),
+                              actions: <Widget>[
+                                // usually buttons at the bottom of the dialog
+                                FlatButton(
+                                  child: Text("Ulangi"),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    _imageList.clear();
+                                  },
+                                ),
+                                FlatButton(
+                                  child: Text("Kirim"),
+                                  onPressed: () {
+                                    _uploadImage();
+                                  },
                                 ),
                               ],
                             ),
                           ),
+                        );
+                      },
+                    );
+                  },
+                  child: Container(
+                    height: MediaQuery.of(context).size.height / 17,
+                    width: (MediaQuery.of(context).size.width),
+                    color: Color(0xff037171),
+                    child: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            "KIRIM",
+                            style: TextStyle(
+                                fontSize:
+                                    MediaQuery.of(context).size.width / 21,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              isLoading
+                  ? Container(
+                      padding: EdgeInsets.all(10),
+                      color: Colors.white,
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.width / 4,
+                        child: Center(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              CircularProgressIndicator(),
+                              Text(
+                                "Mendapatkan lokasi...",
+                                style: TextStyle(color: Colors.black),
+                              )
+                            ],
+                          ),
                         ),
                       ),
-                      gmaps()
-                    ],
-                  )
-                ],
-              ),
-            ),
+                    )
+                  : gmaps()
+            ],
+          )
+        ],
+      ),
     );
   }
 }
