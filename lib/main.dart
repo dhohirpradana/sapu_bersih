@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:location/location.dart' as loc;
 import 'package:onesignal_flutter/onesignal_flutter.dart';
-import 'package:sapubersih/Pages/boot/boot_screen.dart';
+import 'package:sapubersih/pages/boot/boot_screen.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'Pages/chat/chat_page.dart';
-import 'Pages/notifikasi/pengumuman_page.dart';
+import 'pages/chat/chat_page.dart';
+import 'pages/notifikasi/pengumuman_page.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,10 +28,10 @@ class _MyAppState extends State<MyApp> {
   String title = "";
   String content = "";
   String smallIcon;
+
   @override
   void initState() {
     super.initState();
-    getLoc();
     _checkForCameraPermission();
     getPref();
   }

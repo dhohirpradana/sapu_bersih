@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:chat_list/chat_list.dart';
 import 'package:flutter/material.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
-import 'package:sapubersih/Pages/notifikasi/pengumuman_page.dart';
+import 'package:sapubersih/pages/notifikasi/pengumuman_page.dart';
 import 'package:sapubersih/api/api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

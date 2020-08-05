@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:sapubersih/Pages/login_page.dart';
+import 'package:sapubersih/pages/login_page.dart';
 
 class BootScreen extends StatefulWidget {
   @override
@@ -22,7 +22,7 @@ class _BootScreenState extends State<BootScreen> {
             title: Text("Tidak ada koneksi internet"),
             actions: <Widget>[
               FlatButton(
-                child: Text("Ulangi"),
+                child: Text("Coba lagi"),
                 onPressed: () {
                   startTime();
                   Navigator.of(context).pop();
@@ -32,7 +32,10 @@ class _BootScreenState extends State<BootScreen> {
                 width: 15,
               ),
               FlatButton(
-                child: Text("Tutup"),
+                child: Text(
+                  "Tutup",
+                  style: TextStyle(color: Colors.red),
+                ),
                 onPressed: () {
                   SystemChannels.platform.invokeMethod('SystemNavigator.pop');
                 },

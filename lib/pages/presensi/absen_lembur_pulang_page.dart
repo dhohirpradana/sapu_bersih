@@ -21,18 +21,25 @@ import 'package:sapubersih/api/api.dart';
 
 import '../login_page.dart';
 
-class AbsenPulangPage extends StatefulWidget {
+class AbsenLemburPulangPage extends StatefulWidget {
   @override
-  _AbsenPulangPage createState() => _AbsenPulangPage();
+  _AbsenLemburPulangPage createState() => _AbsenLemburPulangPage();
 }
 
-class _AbsenPulangPage extends State<AbsenPulangPage> {
+class _AbsenLemburPulangPage extends State<AbsenLemburPulangPage> {
   @override
   void initState() {
     super.initState();
     getCam();
     getPref();
   }
+
+  @override
+  void dispose() {
+    controller?.dispose();
+    super.dispose();
+  }
+
 //Proses//
 
   getCam() {
@@ -129,8 +136,7 @@ class _AbsenPulangPage extends State<AbsenPulangPage> {
     });
   }
 
-  List<File> _imageList = [];
-
+  File imageFile;
   //CameraOnApp
   //Camera
   void onCapturePressed() async {
@@ -140,19 +146,12 @@ class _AbsenPulangPage extends State<AbsenPulangPage> {
         (await getTemporaryDirectory()).path,
         '${DateTime.now()}.png',
       );
-      _imageList.add(File(path));
+      imageFile = (File(path));
       // 2
       await controller.takePicture(path);
     } catch (e) {
       print(e);
     }
-  }
-
-  signOut() async {
-    SharedPreferences preference = await SharedPreferences.getInstance();
-    setState(() {
-      preference.setInt("value", null);
-    });
   }
 
   Future<Null> _uploadImage() async {
@@ -163,35 +162,39 @@ class _AbsenPulangPage extends State<AbsenPulangPage> {
       builder: (BuildContext context) {
         return WillPopScope(
           onWillPop: () {},
-          child: Dialog(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                    margin: EdgeInsets.all(10),
-                    child: CircularProgressIndicator()),
-                Text("Mengunggah Presensi..."),
-              ],
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 7, sigmaY: 7),
+            child: Dialog(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                      margin: EdgeInsets.all(10),
+                      child: CircularProgressIndicator()),
+                  Text("Lembur pulang upload..."),
+                ],
+              ),
             ),
           ),
         );
       },
     );
-    if (_imageList.length != 0) {
-      _imageList.forEach((f) async {
-        final mimeTypeData =
-            lookupMimeType(f.path, headerBytes: [0xFF, 0xD8]).split('/');
-        final imageUploadRequest =
-            http.MultipartRequest('POST', Uri.parse(BaseUrl.regulerPulang));
-        final file = await http.MultipartFile.fromPath('image', f.path,
-            contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
-        imageUploadRequest.headers['authorization'] = 'Bearer $token';
-        imageUploadRequest.headers['content-type'] = 'multipart/form-data';
-        imageUploadRequest.fields['ext'] = mimeTypeData[1];
-        imageUploadRequest.fields['latitude'] = mylat.toString();
-        imageUploadRequest.fields['longtitude'] = mylon.toString();
-        imageUploadRequest.fields['lokasi'] = lokasiku_addressline.toString();
-        imageUploadRequest.files.add(file);
+    try {
+      final mimeTypeData =
+          lookupMimeType(imageFile.path, headerBytes: [0xFF, 0xD8]).split('/');
+      final imageUploadRequest =
+          http.MultipartRequest('POST', Uri.parse(BaseUrl.lemburPulang));
+      final file = await http.MultipartFile.fromPath('image', imageFile.path,
+          contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
+      imageUploadRequest.headers['authorization'] = 'Bearer $token';
+      imageUploadRequest.headers['content-type'] = 'multipart/form-data';
+      imageUploadRequest.fields['ext'] = mimeTypeData[1];
+      imageUploadRequest.fields['latitude'] = mylat.toString();
+      imageUploadRequest.fields['longtitude'] = mylon.toString();
+      imageUploadRequest.fields['lokasi'] = lokasiku_addressline.toString();
+      imageUploadRequest.files.add(file);
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
         final streamedResponse = await imageUploadRequest.send();
         final response =
             await http.Response.fromStream(streamedResponse).timeout(
@@ -213,14 +216,14 @@ class _AbsenPulangPage extends State<AbsenPulangPage> {
           int value = data['value'];
           if (value == 2) {
             setState(() {
-              _imageList.clear();
+              imageFile = null;
             });
 
             AudioCache player = AudioCache();
-            player.play('anda-sudah-mengisi-presensi-pulang.mp3');
+            player.play('anda-sudah-mengisi-presensi-lembur_pulang.mp3');
 
             Fluttertoast.showToast(
-                msg: "ANDA SUDAH MENGISI PRESENSI PULANG",
+                msg: "ANDA SUDAH MENGISI PRESENSI LEMBUR PULANG",
                 toastLength: Toast.LENGTH_LONG,
                 gravity: ToastGravity.BOTTOM,
                 timeInSecForIos: 1,
@@ -231,14 +234,14 @@ class _AbsenPulangPage extends State<AbsenPulangPage> {
             Navigator.pop(context);
           } else if (value == 1) {
             setState(() {
-              _imageList.clear();
+              imageFile = null;
             });
 
             AudioCache player = AudioCache();
-            player.play('berhasil-mengisi-presensi-pulang.mp3');
+            player.play('berhasil-mengisi-presensi-lembur_pulang.mp3');
 
             Fluttertoast.showToast(
-                msg: "BERHASIL MENGISI PRESENSI PULANG",
+                msg: "BERHASIL MENGISI PRESENSI LEMBUR PULANG",
                 toastLength: Toast.LENGTH_LONG,
                 gravity: ToastGravity.BOTTOM,
                 timeInSecForIos: 1,
@@ -248,12 +251,12 @@ class _AbsenPulangPage extends State<AbsenPulangPage> {
             Navigator.pop(context);
             Navigator.pop(context);
           } else if (value == 0) {
-            _imageList.clear();
+            imageFile = null;
             AudioCache player = AudioCache();
-            player.play('bukan-masanya-mengisi-presensi_pulang.mp3');
+            player.play('bukan-masanya-mengisi-presensi_lembur_pulang.mp3');
 
             Fluttertoast.showToast(
-                msg: "BUKAN MASANYA MENGISI PRESENSI PULANG",
+                msg: "BUKAN MASANYA MENGISI PRESENSI LEMBUR PULANG",
                 toastLength: Toast.LENGTH_LONG,
                 gravity: ToastGravity.BOTTOM,
                 timeInSecForIos: 1,
@@ -263,52 +266,40 @@ class _AbsenPulangPage extends State<AbsenPulangPage> {
             Navigator.pop(context);
           } else {
             AudioCache player = AudioCache();
-            player.play('your-turn.mp3');
+            player.play('Chime.mp3');
 
             Fluttertoast.showToast(
-                msg: "SISTEM SEDANG MAIN TENIS",
+                msg: "ANDA TIDAK MEMILIKI JADWAL",
                 toastLength: Toast.LENGTH_LONG,
-                gravity: ToastGravity.TOP,
+                gravity: ToastGravity.CENTER,
                 timeInSecForIos: 1,
-                backgroundColor: Colors.red.withOpacity(0.9),
+                backgroundColor: Colors.black.withOpacity(0.9),
                 textColor: Colors.white,
                 fontSize: 16.0);
             Navigator.pop(context);
           }
-          final Map<String, dynamic> responseData = json.decode(response.body);
-          return responseData;
         } else {
-          // setState(() {
-          //   resetSavePref(0);
-          // });
-          // signOut();
-          // Navigator.pushAndRemoveUntil(
-          //   context,
-          //   MaterialPageRoute(builder: (context) => LoginPageKu()),
-          //   ModalRoute.withName("/LoginPage"),
-          // );
+          //response.code!=200
           AudioCache player = AudioCache();
-          player.play('your-turn.mp3');
+          player.play('Chime.mp3');
+
           Fluttertoast.showToast(
-              msg: "SISTEM SEDANG MAIN TENIS",
+              msg: "ANDA TIDAK MEMILIKI JADWAL",
               toastLength: Toast.LENGTH_LONG,
-              gravity: ToastGravity.TOP,
+              gravity: ToastGravity.CENTER,
               timeInSecForIos: 1,
-              backgroundColor: Colors.red.withOpacity(0.9),
+              backgroundColor: Colors.black.withOpacity(0.9),
               textColor: Colors.white,
               fontSize: 16.0);
           Navigator.pop(context);
         }
-      });
-    } else {
-      AudioCache player = AudioCache();
-      player.play('anda-belum-memasukan-foto1593391851.mp3');
-
+      }
+    } on SocketException catch (_) {
+      imageFile = null;
       Fluttertoast.showToast(
-          msg: "MASUKAN FOTO",
-          toastLength: Toast.LENGTH_SHORT,
+          msg: "Harap periksa koneksi jaringan Anda",
+          toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.BOTTOM,
-          timeInSecForIos: 1,
           backgroundColor: Colors.black.withOpacity(0.9),
           textColor: Colors.white,
           fontSize: 16.0);
@@ -317,7 +308,6 @@ class _AbsenPulangPage extends State<AbsenPulangPage> {
   }
 
 //Builder//
-
 //gmaps
 
   Widget gmaps() {
@@ -511,7 +501,7 @@ class _AbsenPulangPage extends State<AbsenPulangPage> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               IgnorePointer(
-                ignoring: (isLoading) ? true : false,
+                ignoring: isLoading ? true : false,
                 child: GestureDetector(
                   onTap: () {
                     onCapturePressed();
@@ -521,29 +511,30 @@ class _AbsenPulangPage extends State<AbsenPulangPage> {
                       builder: (BuildContext context) {
                         // return object of type Dialog
                         return WillPopScope(
-                            onWillPop: () {},
-                            child: BackdropFilter(
-                              filter: ImageFilter.blur(sigmaX: 7, sigmaY: 7),
-                              child: AlertDialog(
-                                title: Text("Kirim Presensi Regular Pulang ?"),
-                                actions: <Widget>[
-                                  // usually buttons at the bottom of the dialog
-                                  FlatButton(
-                                    child: Text("Ulangi"),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                      _imageList.clear();
-                                    },
-                                  ),
-                                  FlatButton(
-                                    child: Text("Kirim"),
-                                    onPressed: () {
-                                      _uploadImage();
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ));
+                          onWillPop: () {},
+                          child: BackdropFilter(
+                            filter: ImageFilter.blur(sigmaX: 7, sigmaY: 7),
+                            child: AlertDialog(
+                              title: Text("Kirim Presensi Lembur Pulang ?"),
+                              actions: <Widget>[
+                                // usually buttons at the bottom of the dialog
+                                FlatButton(
+                                  child: Text("Ulangi"),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    imageFile = null;
+                                  },
+                                ),
+                                FlatButton(
+                                  child: Text("Kirim"),
+                                  onPressed: () {
+                                    _uploadImage();
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
                       },
                     );
                   },

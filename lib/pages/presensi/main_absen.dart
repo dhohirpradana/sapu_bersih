@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:sapubersih/Pages/presensi/absen_lembur_page.dart';
-import 'package:sapubersih/Pages/presensi/absen_lembur_pulang_page.dart';
-import 'package:sapubersih/Pages/presensi/absen_reguler_page.dart';
+import 'package:sapubersih/pages/presensi/absen_lembur_page.dart';
+import 'package:sapubersih/pages/presensi/absen_lembur_pulang_page.dart';
+import 'package:sapubersih/pages/presensi/absen_reguler_page.dart';
 import 'package:sapubersih/api/api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../login_page.dart';
@@ -36,6 +36,7 @@ class _MainAbsenPageState1 extends State<MainPresensiPage1> {
   }
 
   Map<String, dynamic> jadwal;
+  var res;
   getJadwal() async {
     var response = await http.get(Uri.encodeFull(BaseUrl.jadwal), headers: {
       HttpHeaders.authorizationHeader:
@@ -44,9 +45,13 @@ class _MainAbsenPageState1 extends State<MainPresensiPage1> {
     });
     print(response.statusCode);
     if (response.statusCode != 200) {
-      Navigator.pop(context);
+      res = 300;
+      setState(() {
+        isLoading = false;
+      });
       jadwal = null;
     } else {
+      res = 200;
       setState(() {
         jadwal = json.decode(response.body);
         isLoading = false;
@@ -305,7 +310,7 @@ class _MainAbsenPageState1 extends State<MainPresensiPage1> {
                       padding: EdgeInsets.all(5),
                       width: MediaQuery.of(context).size.width / 1.2,
                       height: MediaQuery.of(context).size.height / 1.5,
-                      child: (jadwal != null)
+                      child: (res <= 299)
                           ? Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
@@ -317,14 +322,14 @@ class _MainAbsenPageState1 extends State<MainPresensiPage1> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
-                                      Text("       "),
+                                      Text("    "),
                                       Text(
                                         jadwal["data"]["nama_hari"]
                                             .toString()
                                             .toUpperCase(),
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
-                                            fontSize: 14),
+                                            fontSize: 16),
                                       ),
                                       Text(
                                         formattedDate.toString().toUpperCase(),
@@ -622,15 +627,32 @@ class _MainAbsenPageState1 extends State<MainPresensiPage1> {
                                 ),
                               ],
                             )
-                          : Text("TUGAS TIDAK ADA",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 14)),
+                          : Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  Text("JADWAL TIDAK ADA",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14)),
+                                  Text("(tidak memiliki tugas)",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14)),
+                                ],
+                              ),
+                            ),
                     ),
                   ),
                 ),
                 replacement: Center(),
               )
-            : Center(),
+            : Visibility(
+                visible: !_isVisible,
+                child: Center(
+                  child: CircularProgressIndicator(),
+                )),
       ],
     );
   }

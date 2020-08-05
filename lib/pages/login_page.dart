@@ -7,7 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sapubersih/Pages/home_page.dart';
+import 'package:sapubersih/pages/home_page.dart';
 import 'package:sapubersih/api/api.dart';
 import 'login_assets/background.dart';
 

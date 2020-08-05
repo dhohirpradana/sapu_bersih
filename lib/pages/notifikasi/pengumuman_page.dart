@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
-import 'package:sapubersih/Pages/chat/chat_page.dart';
+import 'package:sapubersih/pages/chat/chat_page.dart';
 import 'package:sapubersih/api/api.dart';
 import 'package:http/http.dart' as http;
 
@@ -100,7 +100,7 @@ class _PengumumanPageState extends State<PengumumanPage> {
               child: (length < 1)
                   ? Center(
                       child: Text(
-                        "Belum Ada Data",
+                        "Tidak Ada Pengumuman",
                         style: TextStyle(
                             fontSize: MediaQuery.of(context).size.width / 23,
                             fontWeight: FontWeight.w400,
@@ -154,15 +154,25 @@ class _PengumumanPageState extends State<PengumumanPage> {
                               .toString();
                           return Container(
                             child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
                               children: <Widget>[
                                 Container(
-                                  margin: EdgeInsets.only(top: 5),
+                                  width: MediaQuery.of(context).size.width / 3,
+                                  decoration: BoxDecoration(
+                                      color: Color(0xffFFFACD),
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(25),
+                                          topRight: Radius.circular(15))),
+                                  margin: EdgeInsets.only(top: 5, right: 5),
+                                  padding: EdgeInsets.only(
+                                      right: 5, top: 2, bottom: 2),
                                   child: Row(
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: <Widget>[
                                       Container(
-                                        margin: EdgeInsets.only(right: 11),
+                                        margin:
+                                            EdgeInsets.only(right: 11, top: 5),
                                         child: Text(
                                           "$tanggal $namab $tahun, $jam",
                                           textAlign: TextAlign.center,
@@ -178,14 +188,22 @@ class _PengumumanPageState extends State<PengumumanPage> {
                                   ),
                                 ),
                                 Card(
+                                  color: Color(0xffFFFACD),
                                   margin: EdgeInsets.only(
-                                      top: 1, bottom: 10, right: 5, left: 5),
+                                      bottom: 10, right: 5, left: 5),
                                   shadowColor: Colors.grey.withOpacity(0.5),
-                                  elevation: 5,
+                                  elevation: 0,
                                   child: Container(
+                                    decoration: BoxDecoration(
+                                      border: Border(
+                                        bottom: BorderSide(
+                                            width: 3.99,
+                                            color: Colors.grey.shade300),
+                                      ),
+                                    ),
                                     padding: EdgeInsets.only(
                                         top: 10,
-                                        bottom: 25,
+                                        bottom: 23,
                                         right: 10,
                                         left: 10),
                                     child: Column(

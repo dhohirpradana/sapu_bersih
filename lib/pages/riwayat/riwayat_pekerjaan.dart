@@ -5,7 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sapubersih/Pages/login_page.dart';
+import 'package:sapubersih/pages/login_page.dart';
 import 'package:sapubersih/api/api.dart';
 
 class RiwayatKerjaPage extends StatefulWidget {

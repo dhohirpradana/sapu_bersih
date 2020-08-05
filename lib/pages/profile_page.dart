@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:audioplayers/audio_cache.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:onesignal_flutter/onesignal_flutter.dart';
-import 'package:sapubersih/Pages/home_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sapubersih/Pages/login_page.dart';
+import 'package:sapubersih/pages/login_page.dart';
 import 'package:sapubersih/api/api.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -157,14 +158,18 @@ class _ProfilePageState extends State<ProfilePage> {
                                                         : " ";
       });
     } else {
-      setState(() {
-        resetSavePref(0);
-      });
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => LoginPageKu()),
-        ModalRoute.withName("/LoginPage"),
-      );
+      AudioCache player = AudioCache();
+      player.play('Chime.mp3.mp3');
+
+      Fluttertoast.showToast(
+          msg: "TIDAK MEMILIKI TUGAS",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 1,
+          backgroundColor: Colors.red.withOpacity(0.9),
+          textColor: Colors.white,
+          fontSize: 16.0);
+      Navigator.pop(context);
     }
   }
 
@@ -435,11 +440,13 @@ class _ProfilePageState extends State<ProfilePage> {
                           children: <Widget>[
                             Text(
                               "Logout",
-                              style: TextStyle(fontWeight: FontWeight.w600),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black87),
                             ),
                             Icon(
                               Icons.exit_to_app,
-                              color: Color(0xff037171),
+                              color: Colors.red,
                             ),
                           ],
                         ),
