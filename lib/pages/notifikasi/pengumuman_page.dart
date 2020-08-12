@@ -171,8 +171,8 @@ class _PengumumanPageState extends State<PengumumanPage> {
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: <Widget>[
                                       Container(
-                                        margin:
-                                            EdgeInsets.only(right: 11, top: 5),
+                                        margin: EdgeInsets.only(
+                                            right: 11, top: 5, left: 7),
                                         child: Text(
                                           "$tanggal $namab $tahun, $jam",
                                           textAlign: TextAlign.center,

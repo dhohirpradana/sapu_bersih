@@ -191,7 +191,19 @@ class _PerekamanPageState extends State<PerekamanLemburPage> {
       imageUploadRequest.files.add(file);
       final result = await InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        final streamedResponse = await imageUploadRequest.send();
+        final streamedResponse = await imageUploadRequest
+            .send()
+            .timeout(const Duration(seconds: 15), onTimeout: () {
+          Fluttertoast.showToast(
+              msg: "WAKTU TUNGGU HABIS",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIos: 1,
+              backgroundColor: Colors.black.withOpacity(0.9),
+              textColor: Colors.white,
+              fontSize: 16.0);
+          Navigator.pop(context);
+        });
         final response = await http.Response.fromStream(streamedResponse);
         if (response.statusCode == 200) {
           final data = json.decode(response.body);
